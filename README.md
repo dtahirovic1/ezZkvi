@@ -14,10 +14,12 @@ The platform provides an interactive learning environment where students can tes
 
 ## Tech Stack
 
-- **Backend:** C#, .NET / ASP.NET Core MVC
-- **Frontend:** HTML, CSS
-- **Architecture:** Model-View-Controller (MVC)
-- **Design Principles:** SOLID, Object-Oriented Programming (OOP)
+- **Backend:** C#, ASP.NET Core MVC
+- **Frontend:** HTML, CSS, JavaScript, Razor Views
+- **Database:** PostgreSQL
+- **ORM:** Entity Framework Core (Npgsql)
+- **Authentication & Authorization:** ASP.NET Core Identity
+- **Architecture:** MVC, SOLID Principles
 - **Version Control:** Git & GitHub
 
 ## Project Background

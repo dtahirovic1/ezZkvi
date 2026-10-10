@@ -19,7 +19,7 @@ namespace ezZkvi.Services
                 string.IsNullOrWhiteSpace(_settings.Password))
             {
                 throw new InvalidOperationException(
-                    "Email konfiguracija nije ispravno podešena. Provjerite SMTP podatke u appsettings.json ili Render Environment Variables."
+                    "Email konfiguracija nije ispravno podešena. Provjerite SMTP podatke u appsettings.json ili Environment Variables."
                 );
             }
         }
@@ -65,7 +65,7 @@ namespace ezZkvi.Services
             catch (Exception ex)
             {
                 throw new InvalidOperationException(
-                    "Email nije poslan. Provjerite SMTP email, username i Gmail App Password.",
+                    "Email nije poslan. Provjerite Brevo SMTP konfiguraciju.",
                     ex
                 );
             }

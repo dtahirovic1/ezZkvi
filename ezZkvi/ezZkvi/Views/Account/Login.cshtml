@@ -199,6 +199,36 @@
     font-weight: 600;
     line-height: 1.45;
 }
+        .auth-alert {
+            padding: 10px 12px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            font-size: 10px;
+            line-height: 1.5;
+            font-weight: 400;
+            text-align: left;
+            width: 100%;
+        }
+
+        .auth-alert--success {
+            color: #00E676;
+            border: 1px solid #00E676;
+        }
+
+        .auth-alert--error {
+            color: #FF5252;
+            border: 1px solid #FF5252;
+        }
+
+        .auth-alert ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .auth-alert.validation-summary-valid {
+            display: none;
+        }
 </style>
 }
 
@@ -218,25 +248,25 @@
       <button class="tab @(activeTab == "register" ? "active" : "")" onclick="switchTab('register')">Registracija</button>
     </div>
 
-@if (TempData["Message"] != null)
-{
-            <div style="padding:12px; margin-bottom:15px; border:1px solid #00E676; color:#00E676; border-radius:8px;">
+        @if (TempData["Message"] != null)
+        {
+            <div class="auth-alert auth-alert--success">
                 @TempData["Message"]
             </div>
-}
+        }
 
-@if (TempData["Error"] != null)
-{
-            <div style="padding:12px; margin-bottom:15px; border:1px solid #FF5252; color:#FF5252; border-radius:8px;">
+        @if (TempData["Error"] != null)
+        {
+            <div class="auth-alert auth-alert--error">
                 @TempData["Error"]
             </div>
-}
+        }
 
     <!-- LOGIN -->
         <div class="panel @(activeTab == "login" ? "active" : "")" id="login">
             <form asp-controller="Account" asp-action="Login" method="post">
                 @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="error-msg show"></div>
+                <div asp-validation-summary="ModelOnly" class="auth-alert auth-alert--error"></div>
                 <div class="form-group">
                     <label>Email</label>
                     <input type="email" name="Email" placeholder="Unesite email" autocomplete="username">
@@ -261,7 +291,7 @@
         <div class="panel @(activeTab == "register" ? "active" : "")" id="register">
             <form asp-controller="Account" asp-action="Register" method="post">
                 @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="error-msg show"></div>
+                <div asp-validation-summary="ModelOnly" class="auth-alert auth-alert--error"></div>
                 <div class="form-group">
                     <label>Email adresa</label>
                     <input type="email" name="Email" placeholder="Unesite email" autocomplete="email">
