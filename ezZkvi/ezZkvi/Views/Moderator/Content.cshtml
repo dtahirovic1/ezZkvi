@@ -16,8 +16,8 @@
             --surface: #0F1620;
             --card: #141D2B;
             --border: #1E2D42;
-            --accent: #00E5FF;
-            --amber: #FFB300;
+            --accent: #bfc0c3;
+            --amber: #d6d6d8;
             --text: #E8EDF5;
             --muted: #5A7090;
             --success: #00E676;
@@ -33,7 +33,7 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Nunito Sans',sans-serif;
+            font-family: 'DM Sans',sans-serif;
             min-height: 100vh;
             padding: 28px 24px;
         }
@@ -48,7 +48,7 @@
         }
 
         .page-title {
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-size: 1.7rem;
             font-weight: 700;
             letter-spacing: 1px;
@@ -60,8 +60,8 @@
 
         .role-badge {
             padding: 5px 14px;
-            background: rgba(0,229,255,0.1);
-            border: 1px solid rgba(0,229,255,0.3);
+            background: rgba(194,194,198,0.1);
+            border: 1px solid rgba(194,194,198,0.3);
             border-radius: 20px;
             font-size: 0.72rem;
             letter-spacing: 2px;
@@ -104,7 +104,7 @@
             padding: 9px 22px;
             border-radius: 7px;
             cursor: pointer;
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-size: 0.9rem;
             font-weight: 600;
             letter-spacing: 1px;
@@ -141,7 +141,7 @@
                 border-radius: 8px;
                 padding: 10px 14px 10px 36px;
                 color: var(--text);
-                font-family: 'Nunito Sans',sans-serif;
+                font-family: 'DM Sans',sans-serif;
                 font-size: 0.88rem;
                 outline: none;
             }
@@ -168,7 +168,7 @@
             font-size: 0.85rem;
             outline: none;
             cursor: pointer;
-            font-family: 'Nunito Sans',sans-serif;
+            font-family: 'DM Sans',sans-serif;
         }
 
             select:focus {
@@ -182,7 +182,7 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-weight: 700;
             font-size: 0.9rem;
             letter-spacing: 1px;
@@ -196,7 +196,7 @@
 
             .btn-add:hover {
                 background: #fff;
-                box-shadow: 0 0 16px rgba(0,229,255,0.4);
+                box-shadow: 0 0 16px rgba(194,194,198,0.4);
                 color: var(--bg);
             }
 
@@ -233,7 +233,7 @@
             }
 
             .t-row:hover {
-                background: rgba(0,229,255,0.03);
+                background: rgba(194,194,198,0.03);
             }
 
         .q-text-cell {
@@ -254,7 +254,7 @@
             font-size: 0.68rem;
             letter-spacing: 0.8px;
             text-transform: uppercase;
-            background: rgba(0,229,255,0.1);
+            background: rgba(194,194,198,0.1);
             color: var(--accent);
             white-space: nowrap;
             overflow: hidden;
@@ -297,7 +297,7 @@
             color: var(--muted);
             transition: all 0.2s;
             text-decoration: none;
-            font-family: 'Nunito Sans',sans-serif;
+            font-family: 'DM Sans',sans-serif;
             text-align: center;
         }
 
@@ -348,7 +348,7 @@
         }
 
         .modal-title {
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-size: 1.35rem;
             font-weight: 700;
             letter-spacing: 1px;
@@ -390,7 +390,7 @@
             border-radius: 8px;
             padding: 10px 14px;
             color: var(--text);
-            font-family: 'Nunito Sans',sans-serif;
+            font-family: 'DM Sans',sans-serif;
             font-size: 0.88rem;
             outline: none;
         }
@@ -419,7 +419,7 @@
                 left: 12px;
                 top: 50%;
                 transform: translateY(-50%);
-                font-family: 'Rajdhani',sans-serif;
+                font-family: 'Space Grotesk',sans-serif;
                 font-weight: 700;
                 color: var(--muted);
             }
@@ -448,7 +448,7 @@
             border-radius: 8px;
             color: var(--muted);
             cursor: pointer;
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-weight: 700;
             letter-spacing: 1px;
         }
@@ -460,7 +460,7 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -687,7 +687,7 @@
             {
                 <div class="t-row subject-row" data-naziv="@p.Naziv.ToLower()" style="grid-template-columns:1fr 90px 140px">
                     <div><div class="q-text-cell">@p.Naziv</div></div>
-                    <span style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent)">@p.BrojPitanja</span>
+                    <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--accent)">@p.BrojPitanja</span>
                     <div class="actions-cell">
                         <button type="button" class="act-btn edit" data-id="@p.Id" data-naziv="@p.Naziv" onclick="openEditSubject(this)">Uredi</button>
                         <form asp-controller="Predmet" asp-action="DeleteFromContent" asp-route-id="@p.Id" method="post" style="display:inline;"
@@ -735,7 +735,7 @@
                 <div class="t-row area-row" data-naziv="@((o.Naziv + " " + o.PredmetNaziv).ToLower())" style="grid-template-columns:1fr 220px 90px 140px">
                     <div><div class="q-text-cell">@o.Naziv</div></div>
                     <span><span class="tag">@o.PredmetNaziv</span></span>
-                    <span style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent)">@o.BrojPitanja</span>
+                    <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--accent)">@o.BrojPitanja</span>
                     <div class="actions-cell">
                         <button type="button"
                                 class="act-btn edit"

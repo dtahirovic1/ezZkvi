@@ -7,13 +7,13 @@
 <style>
   :root {
     --bg: #080C14; --surface: #0F1620; --card: #141D2B;
-    --border: #1E2D42; --accent: #00E5FF; --amber: #FFB300;
+    --border: #1E2D42; --accent: #bfc0c3; --amber: #d6d6d8;
     --text: #E8EDF5; --muted: #5A7090; --success: #00E676; --danger: #FF5252;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: var(--bg); color: var(--text);
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     min-height: 100vh; display: flex; justify-content: center;
     padding: 40px 20px;
   }
@@ -29,13 +29,13 @@
   .grid-bg {
     position: fixed; inset: 0; z-index: 0;
     background-image:
-      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      linear-gradient(rgba(194,194,198,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(194,194,198,0.03) 1px, transparent 1px);
     background-size: 60px 60px;
   }
   .glow {
     position: fixed; width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(194,194,198,0.07) 0%, transparent 70%);
     top: -200px; left: -200px; z-index: 0;
     animation: floatGlow 8s ease-in-out infinite alternate;
   }
@@ -44,7 +44,7 @@
   .container { position: relative; z-index: 1; width: 100%; max-width: 440px; padding: 20px; }
   .logo-wrap { text-align: center; margin-bottom: 32px; animation: fadeDown 0.6s ease both; }
   .logo {
-    font-family: 'Rajdhani', sans-serif; font-size: 2.4rem; font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif; font-size: 2.4rem; font-weight: 700;
     letter-spacing: 3px; text-transform: uppercase; color: var(--text);
   }
   .logo span { color: var(--accent); }
@@ -59,7 +59,7 @@
   }
   .tab {
     flex: 1; padding: 10px; text-align: center; cursor: pointer; border-radius: 6px;
-    font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 0.9rem;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.9rem;
     letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
     transition: all 0.25s; border: none; background: transparent;
   }
@@ -70,7 +70,7 @@
   input {
     width: 100%; background: var(--surface); border: 1px solid var(--border);
     border-radius: 8px; padding: 12px 14px; color: var(--text);
-    font-family: 'Nunito Sans', sans-serif; font-size: 0.92rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
     outline: none; transition: border-color 0.2s;
   }
   input:focus { border-color: var(--accent); }
@@ -96,18 +96,18 @@
     position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
     background: transparent; border: none; cursor: pointer; color: var(--muted);
     padding: 4px 10px; font-size: 0.72rem; letter-spacing: 1px;
-    text-transform: uppercase; font-family: 'Rajdhani', sans-serif; font-weight: 600;
+    text-transform: uppercase; font-family: 'Space Grotesk', sans-serif; font-weight: 600;
   }
   .toggle-pass:hover { color: var(--accent); }
 
   .btn {
     width: 100%; padding: 13px; background: var(--accent); color: var(--bg);
     border: none; border-radius: 8px; cursor: pointer;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 700;
     letter-spacing: 2px; text-transform: uppercase; transition: all 0.2s; margin-top: 6px;
     position: relative; overflow: hidden;
   }
-  .btn:hover { background: #fff; box-shadow: 0 0 24px rgba(0,229,255,0.4); transform: translateY(-1px); }
+  .btn:hover { background: #fff; box-shadow: 0 0 24px rgba(194,194,198,0.4); transform: translateY(-1px); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
   .btn .spinner {
     display: none; width: 18px; height: 18px; border: 2px solid transparent;
@@ -125,7 +125,7 @@
   .strength-label { font-size: 0.7rem; margin-top: 3px; color: var(--muted); transition: color 0.3s; }
 
   .info-box {
-    background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.2);
+    background: rgba(194,194,198,0.06); border: 1px solid rgba(194,194,198,0.2);
     border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; color: var(--accent);
     display: flex; align-items: center; gap: 8px; margin-top: 14px;
   }
@@ -135,11 +135,11 @@
   .demo-btns { display: flex; gap: 8px; }
   .demo-btn {
     flex: 1; padding: 10px 8px; background: var(--surface); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--muted); cursor: pointer; font-family: 'Rajdhani', sans-serif;
+    border-radius: 8px; color: var(--muted); cursor: pointer; font-family: 'Space Grotesk', sans-serif;
     font-size: 0.82rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
     transition: all 0.2s; text-align: center;
   }
-  .demo-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.04); }
+  .demo-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(194,194,198,0.04); }
   .demo-btn span { display: block; font-size: 0.65rem; color: var(--border); margin-top: 2px; font-weight: 400; letter-spacing: 0; text-transform: none; }
 
   .panel { display: none; }
@@ -157,7 +157,7 @@
 
   .corner-deco {
     position: fixed; bottom: 20px; right: 20px;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.68rem; letter-spacing: 3px;
+    font-family: 'Space Grotesk', sans-serif; font-size: 0.68rem; letter-spacing: 3px;
     color: var(--border); text-transform: uppercase; z-index: 1;
   }
   .toast {
@@ -192,8 +192,8 @@
     margin-top: 14px;
     padding: 10px 12px;
     border-radius: 8px;
-    background: rgba(0,229,255,0.06);
-    border: 1px solid rgba(0,229,255,0.18);
+    background: rgba(194,194,198,0.06);
+    border: 1px solid rgba(194,194,198,0.18);
     color: var(--accent);
     font-size: 0.78rem;
     font-weight: 600;

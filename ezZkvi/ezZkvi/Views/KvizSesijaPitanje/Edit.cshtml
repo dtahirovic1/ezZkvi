@@ -1,10 +1,10 @@
-﻿@model ezZkvi.Models.KvizSesijaPitanje
+@model ezZkvi.Models.KvizSesijaPitanje
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Uređivanje pitanja u kvizu";
 }
 
-<h1>Edit</h1>
+<h1>Uređivanje pitanja u kvizu</h1>
 
 <h4>KvizSesijaPitanje</h4>
 <hr />
@@ -29,14 +29,14 @@
                 <span asp-validation-for="Tacno" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Sačuvaj" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Nazad na pregled</a>
 </div>
 
 @section Scripts {

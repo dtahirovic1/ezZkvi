@@ -6,28 +6,28 @@
 <style>
   :root {
     --bg:#080C14; --surface:#0F1620; --card:#141D2B;
-    --border:#1E2D42; --accent:#00E5FF; --amber:#FFB300;
+    --border:#1E2D42; --accent:#bfc0c3; --amber:#d6d6d8;
     --text:#E8EDF5; --muted:#5A7090; --success:#00E676; --danger:#FF5252;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'Nunito Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:32px 20px; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:32px 20px; }
 
   .header { width:100%; max-width:1060px; display:flex; align-items:center; gap:16px; margin-bottom:28px; }
   .back-btn { padding:8px 16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:0.85rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px; text-decoration:none; }
   .back-btn:hover { border-color:var(--accent); color:var(--accent); }
   .header-info { flex:1; }
-  .header-title { font-family:'Rajdhani',sans-serif; font-size:1.5rem; font-weight:700; letter-spacing:1px; }
+  .header-title { font-family:'Space Grotesk',sans-serif; font-size:1.5rem; font-weight:700; letter-spacing:1px; }
   .header-sub { font-size:0.8rem; color:var(--muted); margin-top:2px; }
 
   .subject-selector { width:100%; max-width:1060px; display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
-  .subject-dropdown { background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:10px 14px; font-size:0.9rem; font-family:'Nunito Sans',sans-serif; outline:none; cursor:pointer; min-width:280px; }
+  .subject-dropdown { background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:10px 14px; font-size:0.9rem; font-family:'DM Sans',sans-serif; outline:none; cursor:pointer; min-width:280px; }
   .subject-dropdown:focus { border-color:var(--accent); }
 
   .prepare-layout { width:100%; max-width:1060px; display:grid; grid-template-columns:240px minmax(0, 1fr); gap:20px; align-items:start; }
   .area-sidebar { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; position:sticky; top:20px; }
-  .area-title { font-family:'Rajdhani',sans-serif; font-size:0.78rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+  .area-title { font-family:'Space Grotesk',sans-serif; font-size:0.78rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
   .area-filter { width:100%; text-align:left; padding:10px 12px; margin-bottom:8px; background:var(--surface); border:1px solid var(--border); border-radius:9px; color:var(--text); cursor:pointer; transition:0.2s; font-size:0.86rem; }
-  .area-filter:hover, .area-filter.active { border-color:var(--accent); color:var(--accent); background:rgba(0,229,255,0.06); }
+  .area-filter:hover, .area-filter.active { border-color:var(--accent); color:var(--accent); background:rgba(194,194,198,0.06); }
   .practice-main { min-width:0; }
 
   .progress-wrap { width:100%; margin-bottom:24px; }
@@ -40,11 +40,11 @@
   .q-text { font-size:1.15rem; font-weight:600; line-height:1.6; margin-bottom:28px; }
   .options { display:flex; flex-direction:column; gap:12px; }
   .option { padding:16px 20px; background:var(--surface); border:1.5px solid var(--border); border-radius:10px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:14px; font-size:0.95rem; }
-  .option:hover { border-color:var(--accent); background:rgba(0,229,255,0.04); }
-  .option.selected { border-color:var(--accent); background:rgba(0,229,255,0.08); }
+  .option:hover { border-color:var(--accent); background:rgba(194,194,198,0.04); }
+  .option.selected { border-color:var(--accent); background:rgba(194,194,198,0.08); }
   .option.correct { border-color:var(--success); background:rgba(0,230,118,0.08); }
   .option.wrong { border-color:var(--danger); background:rgba(255,82,82,0.08); }
-  .opt-letter { width:32px; height:32px; border-radius:6px; background:var(--border); display:flex; align-items:center; justify-content:center; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.9rem; flex-shrink:0; transition:all 0.2s; }
+  .opt-letter { width:32px; height:32px; border-radius:6px; background:var(--border); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.9rem; flex-shrink:0; transition:all 0.2s; }
   .option.selected .opt-letter { background:var(--accent); color:var(--bg); }
   .option.correct .opt-letter { background:var(--success); color:var(--bg); }
   .option.wrong .opt-letter { background:var(--danger); color:white; }
@@ -52,18 +52,18 @@
   .feedback-box { margin-top:20px; padding:16px 20px; border-radius:10px; font-size:0.9rem; line-height:1.5; display:none; animation:fadeUp 0.3s ease both; }
   .feedback-box.correct-fb { background:rgba(0,230,118,0.1); border:1px solid rgba(0,230,118,0.3); color:var(--success); }
   .feedback-box.wrong-fb { background:rgba(255,82,82,0.1); border:1px solid rgba(255,82,82,0.3); color:#ff8a80; }
-  .fb-title { font-weight:700; margin-bottom:4px; font-family:'Rajdhani',sans-serif; font-size:1rem; letter-spacing:1px; }
+  .fb-title { font-weight:700; margin-bottom:4px; font-family:'Space Grotesk',sans-serif; font-size:1rem; letter-spacing:1px; }
 
   .actions { display:flex; justify-content:flex-end; margin-top:24px; gap:12px; flex-wrap:wrap; }
-  .btn { padding:12px 28px; border:none; border-radius:8px; cursor:pointer; font-family:'Rajdhani',sans-serif; font-size:0.95rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; transition:all 0.2s; }
+  .btn { padding:12px 28px; border:none; border-radius:8px; cursor:pointer; font-family:'Space Grotesk',sans-serif; font-size:0.95rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; transition:all 0.2s; }
   .btn-primary { background:var(--accent); color:var(--bg); }
-  .btn-primary:hover { background:#fff; box-shadow:0 0 20px rgba(0,229,255,0.4); }
+  .btn-primary:hover { background:#fff; box-shadow:0 0 20px rgba(194,194,198,0.4); }
   .btn-secondary { background:var(--surface); color:var(--muted); border:1px solid var(--border); }
   .btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
 
   .mini-stats { display:flex; gap:20px; margin-bottom:24px; width:100%; flex-wrap:wrap; }
   .mini-stat { flex:1; min-width:120px; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:12px; }
-  .ms-val { font-family:'Rajdhani',sans-serif; font-size:1.5rem; font-weight:700; }
+  .ms-val { font-family:'Space Grotesk',sans-serif; font-size:1.5rem; font-weight:700; }
   .ms-val.a { color:var(--accent); } .ms-val.s { color:var(--success); } .ms-val.d { color:var(--danger); }
   .ms-label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
 
@@ -83,15 +83,8 @@
 </style>
 }
 
-<div class="header">
-  <a class="back-btn" asp-controller="Student" asp-action="Dashboard">← Nazad</a>
-  <div class="header-info">
-    <div class="header-title">Priprema za kviz</div>
-    <div class="header-sub" id="headerSub">Odaberi predmet i oblast za vježbu</div>
-  </div>
-</div>
-
 <div class="subject-selector" id="subjectSelector">
+  <span class="visually-hidden" id="headerSub" aria-live="polite">Odaberi predmet i oblast za vježbu</span>
   @if (ViewBag.Predmeti != null && ViewBag.Predmeti.Count > 0)
   {
     <label style="font-size:0.78rem;color:var(--muted);align-self:center;margin-right:4px;">Predmet:</label>
@@ -117,19 +110,12 @@
   </aside>
 
   <main class="practice-main">
-    <div class="mini-stats">
-      <div class="mini-stat"><div><div class="ms-val a" id="qCurrent">1</div><div class="ms-label">Trenutno</div></div></div>
-      <div class="mini-stat"><div><div class="ms-val s" id="qCorrect">0</div><div class="ms-label">Tačnih</div></div></div>
-      <div class="mini-stat"><div><div class="ms-val d" id="qWrong">0</div><div class="ms-label">Netačnih</div></div></div>
-      <div class="mini-stat"><div><div class="ms-val" id="qTotal">0</div><div class="ms-label">Ukupno</div></div></div>
+    <div class="progress-wrap" aria-label="Napredak u vježbi">
+      <div class="progress-labels"><span class="ez-progress-caption">Pitanje</span><span id="progLabel">0 / 0</span></div>
+      <div class="prog-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
     </div>
 
-    <div class="progress-wrap">
-      <div class="progress-labels"><span>Napredak</span><span id="progLabel">0 / 0</span></div>
-      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-    </div>
-
-    <div class="q-card" id="qCard">
+    <div class="q-card" id="qCard" aria-live="polite">
       <div class="q-number" id="qNum">Pitanje</div>
       <div class="q-text" id="qText">Učitavanje...</div>
       <div class="options" id="options"></div>
@@ -143,6 +129,14 @@
         <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Sljedeće →</button>
       </div>
     </div>
+
+    <div class="mini-stats">
+      <div class="mini-stat"><div><div class="ms-val a" id="qCurrent">1</div><div class="ms-label">Trenutno</div></div></div>
+      <div class="mini-stat"><div><div class="ms-val s" id="qCorrect">0</div><div class="ms-label">Tačnih</div></div></div>
+      <div class="mini-stat"><div><div class="ms-val d" id="qWrong">0</div><div class="ms-label">Netačnih</div></div></div>
+      <div class="mini-stat"><div><div class="ms-val" id="qTotal">0</div><div class="ms-label">Ukupno</div></div></div>
+    </div>
+
 
     <div class="kb-hint">
       Prečice: <kbd>1</kbd>-<kbd>4</kbd> odgovor · <kbd>→</kbd> sljedeće · <kbd>←</kbd> prethodno
@@ -215,12 +209,26 @@
         if (currentQuestions.length === 0) {
           document.getElementById('progLabel').textContent = '0 / 0';
           document.getElementById('progFill').style.width = '0%';
+          document.querySelector('.prog-bar')?.setAttribute('aria-valuenow', '0');
           document.getElementById('qCurrent').textContent = '0';
           document.getElementById('qCard').innerHTML =
             '<div style="text-align:center;padding:40px 0;color:var(--muted)">Za odabrani filter nema pitanja za vježbu.<br>Pitanje mora imati bar 2 odgovora i tačno jedan tačan.</div>';
           return;
         }
         renderQuestion();
+        // Do not require a manual scroll after selecting a subject or area.
+        requestAnimationFrame(function () {
+          const card = document.getElementById('qCard');
+          if (!card) return;
+          const rect = card.getBoundingClientRect();
+          // Move only enough to reveal the bottom of the current question; never jump
+          // past the shared page heading when the panel already fits the viewport.
+          const missing = rect.bottom - (window.innerHeight - 16);
+          const allowed = Math.max(0, rect.top - 82);
+          if (missing > 0 && allowed > 0) {
+            window.scrollBy({ top: Math.min(missing, allowed), behavior: 'instant' });
+          }
+        });
       })
       .catch(() => {
         document.getElementById('qCard').innerHTML =
@@ -236,15 +244,17 @@
     document.getElementById('qCurrent').textContent = currentQ + 1;
     document.getElementById('progLabel').textContent = (currentQ + 1) + ' / ' + total;
     document.getElementById('progFill').style.width = ((currentQ + 1) / total * 100) + '%';
+    document.querySelector('.prog-bar')?.setAttribute('aria-valuenow', String(Math.round((currentQ + 1) / total * 100)));
 
     let optsHtml = '';
     q.opcije.forEach((opt, i) => {
-      optsHtml += '<div class="option" onclick="selectOption(this,' + i + ')"><div class="opt-letter">' + letters[i] + '</div><span>' + esc(opt) + '</span></div>';
+      optsHtml += '<button type="button" class="option" onclick="selectOption(this,' + i + ')"><span class="opt-letter">' + letters[i] + '</span><span class="option-text">' + esc(opt) + '</span></button>';
     });
 
     document.getElementById('qCard').innerHTML =
-      '<div class="q-number">Pitanje ' + (currentQ + 1) + ' od ' + total + '</div>'
-      + '<div class="q-text">' + esc(q.tekst) + '</div>'
+      '<div class="q-number"><span class="question-index">' + String(currentQ + 1).padStart(2, '0') + '.</span> JEDAN TAČAN ODGOVOR</div>'
+      + '<h2 class="q-text">' + esc(q.tekst) + '</h2>'
+      + '<p class="question-help">Odaberi jedan odgovor ispod.</p>'
       + '<div class="options">' + optsHtml + '</div>'
       + '<div class="feedback-box" id="feedbackBox"><div class="fb-title" id="fbTitle"></div><div id="fbText"></div></div>'
       + '<div class="actions">'
@@ -260,7 +270,7 @@
 
   function otkrijOdgovor(q, odabrani) {
     const opts = document.querySelectorAll('.option');
-    opts.forEach(o => o.style.pointerEvents = 'none');
+    opts.forEach(o => { o.disabled = true; });
     const fb = document.getElementById('feedbackBox');
 
     if (odabrani === q.tacan) {
@@ -302,11 +312,13 @@
     if (currentQ < currentQuestions.length - 1) {
       currentQ++;
       renderQuestion();
+      // Avoid forcing a full-page scroll; retain question in view as the content changes.
+      document.getElementById('qCard')?.scrollIntoView({block:'nearest', behavior:'auto'});
     } else {
       const pct = currentQuestions.length ? Math.round(correctCount / currentQuestions.length * 100) : 0;
       document.getElementById('qCard').innerHTML =
         '<div style="text-align:center;padding:40px 0">'
-        + '<div style="font-family:\'Rajdhani\',sans-serif;font-size:2rem;font-weight:700;margin-bottom:8px">Priprema završena</div>'
+        + '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:2rem;font-weight:700;margin-bottom:8px">Priprema završena</div>'
         + '<div style="color:var(--muted);margin-bottom:24px">Tačnih: <span style="color:var(--success)">' + correctCount + '</span> · Netačnih: <span style="color:var(--danger)">' + wrongCount + '</span> · Rezultat: <span style="color:var(--accent)">' + pct + '%</span></div>'
         + '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">'
         + '<button class="btn btn-primary" onclick="loadSubject(\'' + currentPredmetId + '\',' + (currentOblastId || 'null') + ')">Pokušaj ponovo</button>'
@@ -320,6 +332,7 @@
   }
 
   document.addEventListener('keydown', function (e) {
+    if (e.target.closest('input,select,textarea,button,[contenteditable]')) return;
     var odgovoreno = stanje[currentQ] && stanje[currentQ].odgovoreno;
     if (!odgovoreno && ['1', '2', '3', '4', '5', '6'].includes(e.key)) {
       const opts = document.querySelectorAll('.option');

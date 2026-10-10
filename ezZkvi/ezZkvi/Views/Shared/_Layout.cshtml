@@ -1,36 +1,87 @@
+@{
+    var pageController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
+    var pageAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
+    var isWorkspace = User.Identity?.IsAuthenticated == true &&
+        !(pageController.Equals("Home", StringComparison.OrdinalIgnoreCase) && pageAction.Equals("Index", StringComparison.OrdinalIgnoreCase)) &&
+        !pageController.Equals("Account", StringComparison.OrdinalIgnoreCase);
+    var pageTitle = ViewData["Title"]?.ToString() ?? "Pregled";
+    var activeRole = User.IsInRole("Admin") ? "Administrator" : (User.IsInRole("Moderator") ? "Moderator" : "Student");
+    var isDashboard = pageAction.Equals("Dashboard", StringComparison.OrdinalIgnoreCase);
+    var showPageHeader = isWorkspace && !isDashboard;
+    var dashboardController = activeRole;
+    var backController = ViewData["BackController"]?.ToString() ??
+        ((pageAction == "Edit" || pageAction == "Details" || pageAction == "Delete" || pageAction == "Create") && pageController != "Feedback"
+            ? pageController : dashboardController);
+    var backAction = ViewData["BackAction"]?.ToString() ??
+        (backController == pageController && (pageAction == "Edit" || pageAction == "Details" || pageAction == "Delete" || pageAction == "Create") ? "Index" : "Dashboard");
+    var pageDescription = ViewData["PageDescription"]?.ToString() ??
+        (pageController == "Student" && pageAction == "Prepare" ? "Odaberi predmet, oblast i vježbaj svojim tempom." :
+        pageController == "Student" && pageAction.Contains("Simulation", StringComparison.OrdinalIgnoreCase) || pageController == "Student" && pageAction == "Simulate" ? "Pet pitanja. Tri minute. Provjeri svoje znanje u uslovima ispita." :
+        pageController == "Feedback" && pageAction == "Create" ? "Podijeli prijedlog pitanja ili prijavi problem." :
+        pageController == "Leaderboard" ? "Uporedi rezultate i prati rang-listu." :
+        pageController == "Content" || pageController == "Moderator" && pageAction == "Content" ? "Uređivanje pitanja, oblasti i predmeta." :
+        pageController == "Administrator" && pageAction == "Users" ? "Pregled korisničkih naloga i odobravanje pristupa." : "");
+}
 <!DOCTYPE html>
 <html lang="bs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] – ezZkvi</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    <meta name="theme-color" content="#040506">
+    <title>@pageTitle – ezZkvi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/dashboard-common.css" asp-append-version="true" />
-
-    <style>
-        :root {
-            --bg: #080C14; --surface: #0F1620; --card: #141D2B;
-            --border: #1E2D42; --accent: #00E5FF; --amber: #FFB300;
-            --text: #E8EDF5; --muted: #5A7090; --success: #00E676; --danger: #FF5252;
-            --purple: #BB86FC; --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Nunito Sans', sans-serif;
-            min-height: 100vh;
-        }
-    </style>
-
     @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet" href="~/css/raycast-ui.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ez-workspace.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ez-quiz-v4.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ez-unified-v5.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ez-landing-v6.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ez-purple-v6.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ez-refinements-v7.css" asp-append-version="true" />
 </head>
-<body>
-    @RenderBody()
-
+<body class="app-shell view-@pageController.ToLowerInvariant() view-@pageController.ToLowerInvariant()-@pageAction.ToLowerInvariant() @(isWorkspace ? "ez-has-workspace" : "")">
+    @if (isWorkspace)
+    {
+        <div class="ez-app-frame">
+            @await Html.PartialAsync("_AppSidebar")
+            <div class="ez-backdrop" data-ez-sidebar-close></div>
+            <div class="ez-stage">
+                <header class="ez-stage-header">
+                    <div class="ez-stage-location">
+                        <button class="ez-nav-toggle" type="button" data-ez-sidebar-open aria-controls="ezSidebar" aria-expanded="false" aria-label="Otvori navigaciju"><svg class="ez-icon"><use href="#ez-ic-menu"/></svg></button>
+                        <span class="ez-stage-root">Radni prostor</span><svg class="ez-crumb-chevron ez-icon" aria-hidden="true"><use href="#ez-ic-chevron"/></svg>
+                        <span class="ez-stage-current">@pageTitle</span>
+                    </div>
+                    <div class="ez-stage-right"><span class="ez-live-dot" aria-hidden="true"></span><span>@activeRole</span><span class="ez-stage-tag">ezZkvi</span></div>
+                </header>
+                <div class="ez-stage-body @(showPageHeader ? "ez-page-with-header" : "")" id="ezMainContent">
+                    @if (showPageHeader)
+                    {
+                        <div class="ez-page-header" id="ezPageHeader">
+                            <a asp-controller="@backController" asp-action="@backAction" class="ez-page-back" aria-label="Nazad">
+                                <svg class="ez-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg><span>Nazad</span>
+                            </a>
+                            <div class="ez-page-heading-group">
+                                <h1 class="ez-page-title">@pageTitle</h1>
+                                @if (!string.IsNullOrEmpty(pageDescription)) { <p class="ez-page-description">@pageDescription</p> }
+                            </div>
+                        </div>
+                    }
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/ez-ui.js" asp-append-version="true" defer></script>
+    <script src="~/js/ez-workspace.js" asp-append-version="true" defer></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

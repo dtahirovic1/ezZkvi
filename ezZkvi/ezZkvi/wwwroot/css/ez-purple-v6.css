@@ -1,0 +1,48 @@
+/* ezZkvi V6: restrained violet accents, last in the cascade for every role.
+   Primary buttons remain neutral. Success/warning/error states keep their semantic colors. */
+:root{--ez-violet:#8d70ce;--ez-violet-light:#bda4eb;--ez-violet-line:rgba(145,111,213,.38);--ez-violet-wash:rgba(133,97,196,.105);--ez-accent:#8d70ce;--ez-focus:#bda4eb}
+/* Navigation / recurring chrome */
+body.ez-has-workspace .ez-brand-mark{background:#7859b6!important;box-shadow:inset 0 1px rgba(255,255,255,.2),0 0 16px rgba(105,73,171,.10)!important}
+body.ez-has-workspace .ez-brand-mark>span{border-color:#26143c}
+body.ez-has-workspace .ez-side-link.is-current{background:#1c1924;border-color:#42354f;color:#f4eefc}
+body.ez-has-workspace .ez-side-link.is-current>.ez-icon{color:#bba0ed}
+body.ez-has-workspace .ez-side-link.is-current:before{content:'';height:18px;width:2px;border-radius:2px;background:#9574d3;position:absolute;left:0}
+body.ez-has-workspace .ez-side-link{position:relative}
+body.ez-has-workspace .ez-side-link:hover:not(.is-current){background:#19171f}
+body.ez-has-workspace .ez-avatar{background:#211b2c;border-color:#49365f;color:#d6c5f0}
+body.ez-has-workspace .ez-stage-tag{border-color:#40334f;color:#a799bb}
+body.ez-has-workspace .ez-stage-root::before{content:'';display:inline-block;width:5px;height:5px;vertical-align:middle;margin-right:9px;background:#9478cf;border-radius:50%}
+body.ez-has-workspace .ez-page-title{letter-spacing:-.035em}
+body.ez-has-workspace .ez-page-back:hover{border-color:#70548e;background:#1c1724}
+/* Page headings, labels, dividers: use violet sparingly. */
+body.ez-has-workspace :is(.section-title,.sec-title,.form-title,.area-title)::before{background:#9272cb!important}
+body.ez-has-workspace .layout :is(.section-title,.sec-title)::before{background:#9272cb!important}
+body.ez-has-workspace :is(.question-index,.quiz-session .question-index){color:#b69bdf!important}
+body.ez-has-workspace .quiz-session .timer-box{border-color:#4b3a65;background:#14111b}
+body.ez-has-workspace .quiz-session .timer-value{color:#e9dff8}
+/* Progress signals are a functional accent: same in prep, quiz and dashboards. */
+body.ez-has-workspace :is(.prog-fill,.progress-fill,.xp-bar-fill){background:#9d80d0!important;background-image:none!important}
+body.ez-has-workspace.view-student-prepare .progress-labels #progLabel{color:#cbb7ec}
+body.ez-has-workspace .quiz-session .progress-counter{color:#c8b5eb}
+/* Interactive controls share restrained selection states, not purple primary CTAs. */
+body.ez-has-workspace :is(.filter-btn,.sort-btn,.area-filter,.tab).active,
+body.ez-has-workspace :is(.filter-btn,.sort-btn,.area-filter,.tab)[aria-selected='true']{border-color:#6c548a!important;background:#201a2b!important;color:#e2d4f5!important}
+body.ez-has-workspace :is(.area-filter,.tab,.filter-btn,.sort-btn):hover{border-color:#6c548a}
+body.ez-has-workspace :is(.subject-dropdown,.form-input,.form-control,input:not([type='checkbox']):not([type='radio']):not([type='hidden']):not([type='range']),select,textarea):focus{border-color:#9977d6!important;box-shadow:0 0 0 3px rgba(145,112,207,.15)!important}
+body.ez-has-workspace :is(.option,.answer-option,.answer-card,.q-option):hover:not(.correct):not(.wrong){border-color:#796394!important}
+body.ez-has-workspace .quiz-session .answer-option:hover:not(:disabled),body.ez-has-workspace.view-student-prepare .option:hover:not(:disabled){border-color:#796394!important}
+body.ez-has-workspace :is(.option,.answer-option,.answer-card,.q-option).selected,
+body.ez-has-workspace :is(.option,.answer-option,.answer-card,.q-option).is-selected{border-color:#9577ce!important;background:#211a2c!important}
+/* A quiet line of violet in specific components, not every surface. */
+body.ez-has-workspace .ez-stage-body :is(.section-card,.panel-card,.stat-card,.result-stat,.q-card,.simulation-card,.form-card,.type-card){border-color:#303038}
+body.ez-has-workspace .ez-stage-body :is(.section-card,.panel-card,.stat-card,.result-stat,.q-card,.simulation-card,.form-card,.type-card):hover{border-color:#484050}
+body.ez-has-workspace .ez-stage-body :is(.stat-val.a,.ms-val.a){color:#c3a8ec!important}
+body.ez-has-workspace .ez-stage-body :is(.badge,.status-badge,.pill,.role-badge){border-color:#493b58;color:#c4b5d6;background:#1b1721}
+body.ez-has-workspace .ez-stage-body :is(.active-quiz-banner,.quiz-banner){border-color:#4c3a63!important;background:#17131e!important}
+body.ez-has-workspace .ez-stage-body :is(.active-quiz-banner,.quiz-banner) :is(.banner-title,.banner-label){color:#d6c5eb}
+body.ez-has-workspace .ez-stage-body :is(.q-number,.question-number) .question-index{color:#bda1ec!important}
+body.ez-has-workspace a:focus-visible,body.ez-has-workspace button:focus-visible{outline-color:#c0a6ef!important}
+/* Login and account pages use the same accent family. */
+body.view-account-login :is(.tab.active,.tab[aria-selected='true']){box-shadow:inset 0 -2px #9472cd}
+body.view-account-login :is(input,textarea,select):focus{border-color:#9170c5!important;box-shadow:0 0 0 3px rgba(144,111,201,.14)!important}
+@media (prefers-reduced-motion:reduce){body.ez-has-workspace *{scroll-behavior:auto!important}}

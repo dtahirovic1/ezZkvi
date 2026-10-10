@@ -1,13 +1,13 @@
-﻿@model IEnumerable<ezZkvi.Models.KvizSesijaPitanje>
+@model IEnumerable<ezZkvi.Models.KvizSesijaPitanje>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Pregled pitanja u kvizu";
 }
 
-<h1>Index</h1>
+<h1>Pregled pitanja u kvizu</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj novo</a>
 </p>
 <table class="table">
     <thead>
@@ -37,9 +37,9 @@
                 @Html.DisplayFor(modelItem => item.Tacno)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.ID">Uredi</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Detalji</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Obriši</a>
             </td>
         </tr>
 }

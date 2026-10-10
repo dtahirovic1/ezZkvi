@@ -1,0 +1,55 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var administrator = User.IsInRole("Admin");
+    var moderator = User.IsInRole("Moderator");
+    var roleName = administrator ? "Administrator" : (moderator ? "Moderator" : "Student");
+    var homeController = administrator ? "Administrator" : (moderator ? "Moderator" : "Student");
+    var userName = User.Identity?.Name ?? "Korisnik";
+    var userInitial = userName.Length > 0 ? userName.Substring(0, 1).ToUpperInvariant() : "K";
+    bool active(string controller, string? action = null) =>
+        string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) &&
+        (action == null || string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase));
+    var contentSection = new[] { "Content", "Pitanje", "Predmet", "Oblast", "Odgovor", "KvizSesija", "KvizSesijaPitanje" }.Contains(currentController, StringComparer.OrdinalIgnoreCase);
+}
+<svg class="ez-icon-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="ez-ic-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></symbol>
+    <symbol id="ez-ic-book" viewBox="0 0 24 24"><path d="M12 6.5C9.9 5 6.6 5 3.5 6v13c3.1-1 6.4-1 8.5.5 2.1-1.5 5.4-1.5 8.5-.5V6c-3.1-1-6.4-1-8.5.5ZM12 6.5V19.5"/></symbol>
+    <symbol id="ez-ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="ez-ic-cup" viewBox="0 0 24 24"><path d="M7 3h10v7a5 5 0 0 1-10 0V3ZM7 5H4v3a4 4 0 0 0 4 4M17 5h3v3a4 4 0 0 1-4 4M12 15v4M8 21h8"/></symbol>
+    <symbol id="ez-ic-message" viewBox="0 0 24 24"><path d="M20 11.5c0 4.5-3.6 8-8 8-1.4 0-2.8-.4-4-.9L4 20l1.3-4a8 8 0 1 1 14.7-4.5Z"/></symbol>
+    <symbol id="ez-ic-edit" viewBox="0 0 24 24"><path d="M12 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M9 15l-1 4 4-1 9-9-3-3-9 9ZM16 8l3 3"/></symbol>
+    <symbol id="ez-ic-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3ZM17 5a3 3 0 0 1 0 6M17 14c3 0 4 2 4 5"/></symbol>
+    <symbol id="ez-ic-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="ez-ic-exit" viewBox="0 0 24 24"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5M14 16l4-4-4-4M18 12H9"/></symbol>
+    <symbol id="ez-ic-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="ez-ic-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="ez-ic-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol>
+</defs></svg>
+<aside class="ez-sidebar" id="ezSidebar" aria-label="Glavna navigacija">
+    <div class="ez-sidebar-brand"><a asp-controller="@homeController" asp-action="Dashboard" class="ez-brand" aria-label="ezZkvi – otvori dashboard"><span class="ez-brand-mark" aria-hidden="true"><span></span></span>ezZkvi</a><button type="button" class="ez-sidebar-close" data-ez-sidebar-close aria-label="Zatvori navigaciju"><svg class="ez-icon"><use href="#ez-ic-close"/></svg></button></div>
+    <div class="ez-sidebar-section-name">RADNI PROSTOR</div>
+    <nav class="ez-sidebar-nav" aria-label="Glavne stranice">
+        <a asp-controller="@homeController" asp-action="Dashboard" class="ez-side-link @(active(homeController, "Dashboard") ? "is-current" : "")" aria-current="@(active(homeController, "Dashboard") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-grid"/></svg><span>Pregled</span></a>
+        @if (!administrator && !moderator) {
+        <a asp-controller="Student" asp-action="Prepare" class="ez-side-link @(active("Student", "Prepare") ? "is-current" : "")" aria-current="@(active("Student", "Prepare") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-book"/></svg><span>Priprema</span></a>
+        <a asp-controller="Student" asp-action="Simulate" class="ez-side-link @(active("Student", "Simulate") ? "is-current" : "")" aria-current="@(active("Student", "Simulate") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-clock"/></svg><span>Simulacija kviza</span></a>
+        }
+        @if (administrator) {
+        <a asp-controller="Administrator" asp-action="Users" class="ez-side-link @(active("Administrator", "Users") ? "is-current" : "")" aria-current="@(active("Administrator", "Users") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-users"/></svg><span>Korisnici</span></a>
+        }
+        @if (administrator || moderator) {
+        <a asp-controller="Content" asp-action="Index" class="ez-side-link @(contentSection || active("Moderator", "Content") ? "is-current" : "")" aria-current="@(contentSection || active("Moderator", "Content") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-edit"/></svg><span>Upravljanje sadržajem</span></a>
+        }
+        <a asp-controller="Leaderboard" asp-action="Index" class="ez-side-link @(active("Leaderboard") ? "is-current" : "")" aria-current="@(active("Leaderboard") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-cup"/></svg><span>Rang-lista</span></a>
+        <a asp-controller="Feedback" asp-action="@(administrator || moderator ? "Index" : "Create")" class="ez-side-link @(active("Feedback") ? "is-current" : "")" aria-current="@(active("Feedback") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-message"/></svg><span>@(administrator || moderator ? "Povratne informacije" : "Pošalji feedback")</span></a>
+        @if (administrator) {
+        <a asp-controller="Administrator" asp-action="EmailObavijest" class="ez-side-link @(active("Administrator", "EmailObavijest") ? "is-current" : "")" aria-current="@(active("Administrator", "EmailObavijest") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-mail"/></svg><span>Obavijesti</span></a>
+        }
+    </nav>
+    <div class="ez-sidebar-bottom">
+        <span class="ez-sidebar-divider"></span>
+        <div class="ez-profile"><span class="ez-avatar" aria-hidden="true">@userInitial</span><span class="ez-profile-label"><strong title="@userName">@userName</strong><small>@roleName</small></span></div>
+        <form asp-controller="Account" asp-action="Logout" method="post" class="ez-logout-form">@Html.AntiForgeryToken()<button type="submit" class="ez-side-link ez-logout"><svg class="ez-icon"><use href="#ez-ic-exit"/></svg><span>Odjavi se</span></button></form>
+    </div>
+</aside>

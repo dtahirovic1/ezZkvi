@@ -12,8 +12,8 @@
             --surface: #0F1620;
             --card: #141D2B;
             --border: #1E2D42;
-            --accent: #00E5FF;
-            --amber: #FFB300;
+            --accent: #bfc0c3;
+            --amber: #d6d6d8;
             --text: #E8EDF5;
             --muted: #5A7090;
             --success: #00E676;
@@ -32,7 +32,7 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Nunito Sans',sans-serif;
+            font-family: 'DM Sans',sans-serif;
             min-height: 100vh;
             padding: 32px 20px;
             max-width: 800px;
@@ -47,7 +47,7 @@
         }
 
         .page-title {
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-size: 2rem;
             font-weight: 700;
             letter-spacing: 1px;
@@ -99,7 +99,7 @@
             font-size: 0.82rem;
             cursor: pointer;
             transition: all 0.2s;
-            font-family: 'Nunito Sans',sans-serif;
+            font-family: 'DM Sans',sans-serif;
         }
 
             .filter-btn:hover, .filter-btn.active {
@@ -133,7 +133,7 @@
             font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s;
-            font-family: 'Nunito Sans',sans-serif;
+            font-family: 'DM Sans',sans-serif;
         }
 
             .sort-btn:hover, .sort-btn.active {
@@ -175,7 +175,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-size: 1.4rem;
             font-weight: 700;
             border: 3px solid var(--border);
@@ -206,7 +206,7 @@
         }
 
         .podium-score {
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-size: 1.1rem;
             font-weight: 700;
         }
@@ -217,7 +217,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
             margin: 10px auto 0;
@@ -279,16 +279,16 @@
             }
 
             .table-row:hover {
-                background: rgba(0,229,255,0.03);
+                background: rgba(194,194,198,0.03);
             }
 
             .table-row.me {
-                background: rgba(0,229,255,0.06);
+                background: rgba(194,194,198,0.06);
                 border-left: 3px solid var(--accent);
             }
 
         .rank {
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-weight: 700;
             font-size: 1rem;
             color: var(--muted);
@@ -320,7 +320,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-weight: 700;
             font-size: 0.85rem;
             flex-shrink: 0;
@@ -332,7 +332,7 @@
         }
 
         .you-tag {
-            background: rgba(0,229,255,0.15);
+            background: rgba(194,194,198,0.15);
             color: var(--accent);
             padding: 2px 8px;
             border-radius: 10px;
@@ -343,7 +343,7 @@
         }
 
         .score {
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-weight: 700;
             font-size: 1rem;
             color: var(--accent);
@@ -425,7 +425,7 @@
             var backController = ViewBag.BackController as string ?? "Student";
         }
         <a class="back-link" asp-controller="@backController" asp-action="Dashboard" style="margin-bottom:12px;display:inline-flex">← Nazad</a>
-        <div class="page-title">🏆 Leader<span>board</span></div>
+        <div class="page-title"><svg class="ui-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10v7a5 5 0 0 1-10 0V3ZM7 5H4v2a4 4 0 0 0 4 4M17 5h3v2a4 4 0 0 1-4 4M12 15v4M8 21h8M10 19h4"/></svg> Leader<span>board</span></div>
         <div class="page-sub">Rang lista prema tačnosti</div>
     </div>
 </div>
@@ -436,7 +436,7 @@
     <div style="margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span class="sort-label">Predmet:</span>
         <select id="predmetFilter" onchange="filterPredmet(this)"
-                style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:7px 12px;font-size:0.82rem;font-family:'Nunito Sans',sans-serif;outline:none;cursor:pointer;">
+                style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:7px 12px;font-size:0.82rem;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;">
                 <option value="">Svi predmeti</option>
                 @foreach (var p in ViewBag.Predmeti)
                 {
@@ -506,7 +506,7 @@
                          data-score="@e.Bodovi" data-pct="@e.Tacnost" data-quizzes="@e.Kvizovi" data-name="@e.Ime">
                         <span class="rank @rankClass">@(i + 1)</span>
                         <div class="user-info">
-                            <div class="user-av" style="@(e.JeTrenutni ? "background:rgba(0,229,255,0.12);color:var(--accent)" : "")">@e.Inicijali</div>
+                            <div class="user-av" style="@(e.JeTrenutni ? "background:rgba(194,194,198,0.12);color:var(--accent)" : "")">@e.Inicijali</div>
                             <span class="user-n">@e.Ime @if (e.JeTrenutni) {
                             <span class="you-tag">Ti</span>
                         }
@@ -587,7 +587,7 @@
           sorted.forEach(function(e, i){
             var rankClass = i===0?'t1':(i===1?'t2':(i===2?'t3':''));
             var meClass = e.jeTrenutni ? ' me' : '';
-            var avStyle = e.jeTrenutni ? 'background:rgba(0,229,255,0.12);color:var(--accent)' : '';
+            var avStyle = e.jeTrenutni ? 'background:rgba(194,194,198,0.12);color:var(--accent)' : '';
             var youTag = e.jeTrenutni ? '<span class="you-tag">Ti</span>' : '';
             html += '<div class="table-row'+meClass+'" data-score="'+e.bodovi+'" data-pct="'+e.tacnost+'" data-quizzes="'+e.kvizovi+'" data-name="'+esc(e.ime)+'">'
               + '<span class="rank '+rankClass+'">'+(i+1)+'</span>'

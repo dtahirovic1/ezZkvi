@@ -1,0 +1,261 @@
+/* ezZkvi v4: consistent quiz screens, real interactions first.
+   This file deliberately loads after the legacy student views and workspace styles. */
+:root{--ez-purple:#7454b8;--ez-purple-soft:rgba(116,84,184,.16)}
+body.app-shell .ez-brand-mark,body.app-shell .rc-brand-mark{
+  background:var(--ez-purple);box-shadow:inset 0 1px rgba(255,255,255,.18),0 0 18px rgba(92,61,155,.08);
+}
+body.app-shell .ez-brand-mark>span,body.app-shell .rc-brand-mark>span{border-color:#231436}
+body.ez-has-workspace .ez-brand:hover{color:#fff}
+
+/* Keep both real quiz modes visually consistent with the homepage's demo quiz. */
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-page{
+  width:min(100%,900px);max-width:900px;margin-inline:auto;padding:0!important;
+}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-page:not(.is-playing){max-width:780px}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-page.is-playing .quiz-session{
+  padding:29px 36px 31px;background:#0b0c0e;border:1px solid #323337;border-radius:14px;
+  box-shadow:inset 0 1px rgba(255,255,255,.045);overflow:hidden;
+}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-intro{
+  margin-bottom:24px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;
+}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-intro .back-btn{margin:0}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-intro .page-heading{
+  display:block!important;width:100%;margin:0!important;padding:0;
+}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-intro .page-title{
+  display:block;font:500 clamp(25px,3vw,34px)/1.15 Inter,system-ui,sans-serif;letter-spacing:-.04em;
+}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-intro .page-subtitle{
+  margin:7px 0 0;font-size:13px;line-height:1.6;color:#94959b;
+}
+body.ez-has-workspace .quiz-session-path{
+  display:flex;align-items:center;gap:11px;min-width:0;max-width:100%;color:#8c8e93;
+  font:500 10px/1.5 ui-monospace,'SFMono-Regular',Consolas,monospace;
+  letter-spacing:.065em;text-transform:uppercase;margin-bottom:18px;overflow:hidden;
+}
+body.ez-has-workspace .quiz-session-path>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:none}
+body.ez-has-workspace .quiz-session-path .quiz-path-subject{flex:0 1 auto;min-width:0}
+body.ez-has-workspace .quiz-session-path .quiz-path-divider{color:#494a50}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .quiz-session .quiz-top{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:18px;
+  margin:0 0 20px;min-width:0;
+}
+body.ez-has-workspace .quiz-session .quiz-session-title{flex:1;min-width:0}
+body.ez-has-workspace .quiz-session .section-label{
+  margin:0 0 8px;padding:0;color:#909197;
+  font:500 10px/1.5 ui-monospace,'SFMono-Regular',Consolas,monospace;
+  letter-spacing:.105em;text-transform:uppercase;
+}
+body.ez-has-workspace .quiz-session .section-label:before{display:none}
+body.ez-has-workspace .quiz-session h1.quiz-heading{
+  margin:0 0 6px;color:#f4f4f5;letter-spacing:-.044em;
+  font:500 clamp(23px,2.8vw,31px)/1.2 Inter,system-ui,sans-serif;
+}
+body.ez-has-workspace .quiz-session .quiz-meta{
+  margin:0;font-size:11px;line-height:1.6;color:#8c8d93;
+}
+body.ez-has-workspace .quiz-session .timer-box{
+  flex:none;min-width:112px;padding:9px 13px;border-radius:9px;
+  background:#131318;border:1px solid #34303e;box-shadow:none;
+}
+body.ez-has-workspace .quiz-session .timer-label{
+  color:#87848e;font:500 9px/1.5 ui-monospace,Consolas,monospace;
+  letter-spacing:.1em;margin:0 0 4px;
+}
+body.ez-has-workspace .quiz-session .timer-value{
+  font:600 24px/1.15 Inter,system-ui,sans-serif;letter-spacing:-.04em;
+  color:#eeedf1;font-variant-numeric:tabular-nums;
+}
+body.ez-has-workspace .quiz-session .quiz-progress{margin:0 0 22px}
+body.ez-has-workspace .quiz-session .progress-text{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px;
+  text-transform:none;font:500 10px/1.4 ui-monospace,Consolas,monospace;
+  color:#96979a;letter-spacing:.065em;
+}
+body.ez-has-workspace .quiz-session .progress-counter{
+  display:inline-flex;align-items:baseline;justify-content:flex-end;gap:7px;
+  color:#e5e5e6;font:500 12px/1.1 ui-monospace,Consolas,monospace;
+  letter-spacing:.01em;font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+body.ez-has-workspace .quiz-session .progress-divider{color:#626369}
+body.ez-has-workspace .quiz-session .progress-track{
+  height:3px;background:#2a2b2f;border:0;border-radius:20px;overflow:hidden;
+}
+body.ez-has-workspace .quiz-session .progress-fill{
+  height:100%;background:#c4c3ca;background-image:none;border-radius:20px;transition:width .3s ease;
+}
+body.ez-has-workspace .quiz-session .question-card{
+  border:0!important;box-shadow:none!important;background:transparent!important;
+  margin:0;padding:0!important;border-radius:0;animation:ez-quiz-enter .23s ease both;
+}
+body.ez-has-workspace .quiz-session .question-header{display:block;margin:0 0 20px}
+body.ez-has-workspace .quiz-session .question-number,
+body.ez-has-workspace.view-student-prepare .q-number{
+  color:#9b9ca1;margin:0 0 11px;
+  font:500 10px/1.35 ui-monospace,'SFMono-Regular',Consolas,monospace;
+  letter-spacing:.11em;text-transform:uppercase;
+}
+body.ez-has-workspace .question-index{color:#ac8ade;margin-right:8px}
+body.ez-has-workspace .quiz-session .question-text,
+body.ez-has-workspace.view-student-prepare h2.q-text{
+  margin:0;color:#eeedef;letter-spacing:-.035em;
+  font:500 clamp(18px,2.2vw,23px)/1.45 Inter,system-ui,sans-serif;
+  overflow-wrap:anywhere;
+}
+body.ez-has-workspace .question-help{
+  margin:7px 0 0;color:#87888e;font:400 12px/1.55 Inter,system-ui,sans-serif;
+}
+body.ez-has-workspace .quiz-session .answers,
+body.ez-has-workspace.view-student-prepare .options{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+}
+body.ez-has-workspace .quiz-session .answer-option,
+body.ez-has-workspace.view-student-prepare .option{
+  position:relative;min-width:0;min-height:64px;padding:12px 13px;
+  display:flex;align-items:center;gap:12px;text-align:left;
+  background:#101113!important;border:1px solid #333438!important;
+  border-radius:9px!important;box-shadow:inset 0 1px rgba(255,255,255,.022);
+  color:#d4d4d8;line-height:1.45;font:400 13px/1.5 Inter,system-ui,sans-serif;
+  transition:background .16s,border-color .16s,box-shadow .16s;
+  cursor:pointer;
+}
+body.ez-has-workspace .quiz-session .answer-option:hover,
+body.ez-has-workspace.view-student-prepare .option:hover{
+  background:#18181c!important;border-color:#66616f!important;transform:none;
+}
+body.ez-has-workspace .quiz-session .answer-option input[type=radio]{
+  position:absolute!important;opacity:0!important;left:8px!important;top:8px!important;
+  width:1px!important;height:1px!important;margin:0!important;pointer-events:none;
+}
+body.ez-has-workspace .quiz-session .answer-letter,
+body.ez-has-workspace.view-student-prepare .opt-letter{
+  box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+  width:25px;height:27px;min-width:25px;flex:0 0 25px;
+  font:500 10px/1 ui-monospace,Consolas,monospace;
+  color:#afb0b5!important;background:#202124!important;border:1px solid #434348!important;
+  border-radius:5px!important;
+}
+body.ez-has-workspace .quiz-session .answer-text,
+body.ez-has-workspace.view-student-prepare .option-text{flex:1;min-width:0;overflow-wrap:anywhere}
+body.ez-has-workspace .quiz-session .answer-option:has(input:checked),
+body.ez-has-workspace.view-student-prepare .option.selected{
+  background:#1c1826!important;border-color:#8865bc!important;color:#f7f4fb!important;
+  box-shadow:inset 0 0 0 1px rgba(136,101,188,.16)!important;
+}
+body.ez-has-workspace .quiz-session .answer-option:has(input:checked) .answer-letter,
+body.ez-has-workspace.view-student-prepare .option.selected .opt-letter{
+  background:#63469b!important;border-color:#8d6ac7!important;color:white!important;
+}
+body.ez-has-workspace .quiz-session .answer-option:has(input:focus-visible){outline:2px solid #cdb3ed!important;outline-offset:2px}
+body.ez-has-workspace.view-student-prepare .option:focus-visible{outline:2px solid #cdb3ed!important;outline-offset:2px}
+body.ez-has-workspace .quiz-session .answer-option:has(input:disabled){cursor:default;opacity:.75}
+body.ez-has-workspace .quiz-session .actions{
+  margin:20px 0 0;gap:9px;justify-content:flex-start;display:flex;flex-wrap:wrap;
+}
+body.ez-has-workspace .quiz-session .actions button{min-height:40px;padding:0 17px;font-size:12px;letter-spacing:0;text-transform:none;}
+body.ez-has-workspace .quiz-session .question-error{margin-top:13px}
+body.ez-has-workspace .quiz-session .locked-note{font-size:11px;font-weight:500}
+body.ez-has-workspace .quiz-session :is(.btn-main,.btn-secondary):disabled{opacity:.55;cursor:progress}
+body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-card:not(.quiz-session){padding:26px}
+
+/* Preparation: question appears immediately under the compact progress strip;
+   secondary statistics moved below, not ahead of the question. */
+body.ez-has-workspace.view-student-prepare .ez-stage-body>.header,
+body.ez-has-workspace.view-student-prepare .ez-stage-body>.subject-selector,
+body.ez-has-workspace.view-student-prepare .ez-stage-body>.prepare-layout{
+  width:min(100%,1120px);max-width:1120px;margin-left:auto;margin-right:auto;
+}
+body.ez-has-workspace.view-student-prepare .ez-stage-body>.header{margin-bottom:13px}
+body.ez-has-workspace.view-student-prepare .ez-stage-body>.subject-selector{margin-bottom:18px}
+body.ez-has-workspace.view-student-prepare .header-title{
+  font:500 26px/1.2 Inter,system-ui,sans-serif;letter-spacing:-.035em;
+}
+body.ez-has-workspace.view-student-prepare .header-sub{margin-top:2px;color:#97989e}
+body.ez-has-workspace.view-student-prepare .prepare-layout{
+  grid-template-columns:210px minmax(0,1fr);gap:18px;align-items:start;
+}
+body.ez-has-workspace.view-student-prepare .area-sidebar{
+  background:#0d0e10;border:1px solid #303135;border-radius:12px;
+  padding:16px;top:94px;box-shadow:inset 0 1px rgba(255,255,255,.03);
+}
+body.ez-has-workspace.view-student-prepare .area-title{
+  font:600 12px/1.5 Inter,system-ui,sans-serif;margin:0 0 12px;letter-spacing:0;
+}
+body.ez-has-workspace.view-student-prepare .area-filter{font:500 12px/1.4 Inter,system-ui,sans-serif;margin-bottom:5px;padding:9px 11px}
+body.ez-has-workspace.view-student-prepare .practice-main{width:100%;min-width:0}
+body.ez-has-workspace.view-student-prepare .progress-wrap{margin:0 0 17px}
+body.ez-has-workspace.view-student-prepare .progress-labels{
+  margin:0 0 9px;color:#93959a;font:500 10px/1.3 ui-monospace,Consolas,monospace;letter-spacing:.05em;
+}
+body.ez-has-workspace.view-student-prepare .prog-bar{height:3px;background:#292a2d;border:0}
+body.ez-has-workspace.view-student-prepare .prog-fill{background:#c4c3ca;transition:width .25s}
+body.ez-has-workspace.view-student-prepare .q-card{
+  background:#0b0c0e!important;border:1px solid #303135!important;
+  border-radius:13px;padding:26px 30px!important;box-shadow:inset 0 1px rgba(255,255,255,.03);
+}
+body.ez-has-workspace.view-student-prepare h2.q-text{margin-bottom:0}
+body.ez-has-workspace.view-student-prepare .q-card .question-help{margin-bottom:19px}
+body.ez-has-workspace.view-student-prepare .q-card>.options{margin-top:19px}
+body.ez-has-workspace.view-student-prepare .q-card .actions{margin-top:21px;gap:10px}
+body.ez-has-workspace.view-student-prepare .q-card .btn{
+  min-height:40px;padding:0 16px;font:600 12px/1 Inter,system-ui,sans-serif;
+  letter-spacing:0;text-transform:none;
+}
+body.ez-has-workspace.view-student-prepare .mini-stats{margin:18px 0 0;gap:10px}
+body.ez-has-workspace.view-student-prepare .mini-stat{
+  padding:12px 14px;min-width:100px;flex:1 1 105px;display:flex;background:#0d0e10;
+  border:1px solid #303135;border-radius:9px;box-shadow:none;
+}
+body.ez-has-workspace.view-student-prepare .ms-val{color:#d9d9dd!important;font:500 20px/1.15 Inter,system-ui,sans-serif}
+body.ez-has-workspace.view-student-prepare .ms-label{font:500 9px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.055em;color:#96979d}
+body.ez-has-workspace.view-student-prepare .option.correct{
+  background:#14241c!important;border-color:#4c9a72!important;
+}
+body.ez-has-workspace.view-student-prepare .option.correct .opt-letter{background:#327b55!important;border-color:#4c9a72!important;color:white!important}
+body.ez-has-workspace.view-student-prepare .option.wrong{background:#29191a!important;border-color:#a45862!important}
+body.ez-has-workspace.view-student-prepare .option.wrong .opt-letter{background:#813e48!important;border-color:#a45862!important;color:white!important}
+body.ez-has-workspace.view-student-prepare .option:disabled{cursor:default}
+body.ez-has-workspace.view-student-prepare .feedback-box{font-size:12px}
+body.ez-has-workspace.view-student-prepare .kb-hint{margin-top:14px;color:#6d6e73}
+
+@keyframes ez-quiz-enter{from{opacity:.6;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:850px){
+  body.ez-has-workspace.view-student-prepare .prepare-layout{grid-template-columns:175px minmax(0,1fr)}
+  body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-page.is-playing .quiz-session{padding:25px}
+}
+@media(max-width:700px){
+  body.ez-has-workspace.view-student-prepare .prepare-layout{grid-template-columns:1fr}
+  body.ez-has-workspace.view-student-prepare .area-sidebar{position:static;padding:12px 13px}
+  body.ez-has-workspace.view-student-prepare .area-sidebar #areaFilters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin}
+  body.ez-has-workspace.view-student-prepare .area-filter{white-space:nowrap;width:auto;min-width:max-content;margin:0}
+  body.ez-has-workspace.view-student-prepare .mini-stats{flex-direction:row}
+  body.ez-has-workspace.view-student-prepare .mini-stat{min-width:0;flex:1 1 calc(50% - 10px)}
+  body.ez-has-workspace.view-student-prepare .subject-selector{gap:7px}
+  body.ez-has-workspace.view-student-prepare .subject-dropdown{min-width:0;flex:1}
+  body.ez-has-workspace:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .simulation-page.is-playing .quiz-session{padding:20px 17px}
+  body.ez-has-workspace .quiz-session .answers,
+  body.ez-has-workspace.view-student-prepare .options{grid-template-columns:1fr;gap:9px}
+  body.ez-has-workspace .quiz-session .answer-option,
+  body.ez-has-workspace.view-student-prepare .option{min-height:52px;padding:10px 12px}
+  body.ez-has-workspace.view-student-prepare .q-card{padding:20px 17px!important}
+  body.ez-has-workspace .quiz-session-path{gap:7px;font-size:9px}
+  body.ez-has-workspace .quiz-session .quiz-top{gap:10px}
+  body.ez-has-workspace .quiz-session .timer-box{min-width:89px;padding:7px 9px}
+  body.ez-has-workspace .quiz-session .timer-value{font-size:20px}
+  body.ez-has-workspace .quiz-session .quiz-meta{font-size:10px}
+  body.ez-has-workspace.view-student-prepare .ez-stage-body>.header{flex-wrap:nowrap}
+  body.ez-has-workspace.view-student-prepare .header-title{font-size:21px}
+}
+@media(max-width:390px){
+  body.ez-has-workspace .quiz-session h1.quiz-heading{font-size:19px}
+  body.ez-has-workspace .quiz-session .quiz-meta{font-size:9px}
+  body.ez-has-workspace .quiz-session .timer-box{min-width:80px}
+}
+@media(prefers-reduced-motion:reduce){
+  body.ez-has-workspace .quiz-session .question-card{animation:none}
+}
+
+/* Sticky workspace toolbar must not conceal quiz content after auto-scroll. */
+body:is(.view-student-simulate,.view-student-startsimulation,.view-student-continuesimulation,.view-student-submitsimulation) .quiz-session .question-card,
+body.view-student-prepare #qCard{scroll-margin-top:90px}

@@ -1,37 +1,36 @@
-## ezZkvi
+# ezZkvi – University Quiz Platform
 
-Repozitorij **Tima 1 (Grupa 7)** za projekat iz predmeta **Objektno-orijentisana analiza i dizajn**, akademska 2025/2026.
+**ezZkvi** is a web application designed for creating, managing, and taking academic quizzes at the **Faculty of Electrical Engineering (ETF), University of Sarajevo**, specifically for the courses **Programming Techniques (Tehnike programiranja)** and **Discrete Mathematics (Diskretna matematika)**.
 
----
+The platform provides an interactive learning environment where students can test their knowledge, track their results, and prepare for exams.
 
-**ezZkvi** je web aplikacija za kreiranje i igranje online kvizova. Korisnici mogu kreirati kvizove s različitim tipovima pitanja, učestvovati u njima i pratiti vlastite rezultate, dok administratori imaju kontrolu nad korisnicima i sadržajem platforme.
+## Features
 
-Aplikacija je izgrađena na **.NET (C#)** backendu uz **HTML/CSS** frontend, organizovana po **MVC** arhitekturnom obrascu i razvijena u skladu s **SOLID** principima objektno-orijentisanog dizajna.
+- Create, manage, and complete quizzes with different question types.
+- Track quiz results and performance.
+- Role-based access for Students, Moderators, and Administrators.
+- Quiz and question management.
+- User and content administration.
 
----
+## Tech Stack
 
-## Članovi tima:
+- **Backend:** C#, .NET / ASP.NET Core MVC
+- **Frontend:** HTML, CSS
+- **Architecture:** Model-View-Controller (MVC)
+- **Design Principles:** SOLID, Object-Oriented Programming (OOP)
+- **Version Control:** Git & GitHub
+
+## Project Background
+
+Developed as a team project for the **Object-Oriented Analysis and Design** course at the University of Sarajevo, during the 2025/2026 academic year.
+
+## Team Members
 
 - Ahmed Spahić
 - Amir Džafić
 - Dino Tahirović
 - Imran Čustović
 
----
+## Live Application
 
-## Sadržaj repozitorija
-
-Pored izvornog koda, repozitorij sadrži kompletnu projektnu dokumentaciju, specifikaciju zahtjeva, dijagrame klasa, sekvence i aktivnosti, scenarije slučajeva upotrebe, analizu strukturnih paterna i UI dizajn.
-## Link stranice
-
-https://grupa7-tim1-zs9c.onrender.com/
-
-## Testni nalozi
-
-| Uloga | Email | Lozinka |
-|---|---|---|
-| Administrator | admin@ezzkvi.ba | Admin123! |
-| Moderator | moderator@ezzkvi.ba | Moderator123! |
-| Student | student@ezzkvi.ba | Student123! |
-
-Navedeni nalozi su unaprijed odobreni i mogu se koristiti odmah nakon pokretanja aplikacije.
+[Visit ezZkvi](/)

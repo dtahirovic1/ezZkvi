@@ -1,0 +1,243 @@
+/* ezZkvi V7 — focused home text/layout and equal quick-action cards.
+   Load after the shared V6 styles; no backend or other views changed. */
+
+/* HOME: consistently spaced two-column introduction, balanced text and cards. */
+body.view-home-index .ez-landing.el-refined {
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:#060608;
+  color:#f0f0f3;
+  font-family:Inter,system-ui,sans-serif;
+}
+body.view-home-index .el-refined .el-header {
+  background:#08080b;
+  border-bottom:1px solid #232329;
+}
+body.view-home-index .el-refined .el-nav {
+  width:min(1100px,calc(100% - 64px));
+  max-width:1100px;
+  height:72px;
+  padding:0;
+  margin-inline:auto;
+}
+body.view-home-index .el-refined .el-main {
+  width:min(1100px,calc(100% - 64px));
+  max-width:1100px;
+  padding:0;
+  flex:1;
+  margin-inline:auto;
+}
+body.view-home-index .el-refined .el-intro {
+  display:grid;
+  grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+  align-items:center;
+  column-gap:clamp(36px,5vw,76px);
+  min-height:345px;
+  padding:70px 0 63px;
+  border-bottom:1px solid #292931;
+}
+body.view-home-index .el-refined .el-intro-heading,
+body.view-home-index .el-refined .el-intro-info {min-width:0;}
+body.view-home-index .el-refined .el-kicker {
+  font:500 10px/1.5 ui-monospace,Consolas,monospace;
+  letter-spacing:.095em;
+  margin:0 0 24px;
+  color:#b2a0d3;
+}
+body.view-home-index .el-refined .el-intro h1 {
+  margin:0;
+  font-size:clamp(31px,3.45vw,46px);
+  line-height:1.22;
+  letter-spacing:-.045em;
+  font-weight:500;
+  text-wrap:balance;
+}
+body.view-home-index .el-refined .el-intro h1 span {
+  display:block;
+  color:#b39be4;
+}
+body.view-home-index .el-refined .el-intro-info {
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  align-items:flex-start;
+}
+body.view-home-index .el-refined .el-intro-info p {
+  max-width:53ch;
+  margin:0;
+  color:#acacb5;
+  font-size:14px;
+  line-height:1.85;
+  font-weight:400;
+  text-align:left;
+  text-wrap:balance;
+  hyphens:none;
+  overflow-wrap:break-word;
+  text-wrap:balance;
+}
+body.view-home-index .el-refined .el-intro-actions {
+  margin:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+body.view-home-index .el-refined .el-button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:39px;
+  height:auto;
+  padding:10px 15px;
+  gap:12px;
+  font-size:12px;
+  line-height:1.3;
+  border-radius:8px;
+}
+body.view-home-index .el-refined .el-tools {
+  margin:0;
+  padding:46px 0 56px;
+}
+body.view-home-index .el-refined .el-section-heading {margin-bottom:24px;}
+body.view-home-index .el-refined .el-tool-grid {
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+body.view-home-index .el-refined .el-tool {
+  min-height:169px;
+  padding:22px 23px;
+  display:flex;
+  align-items:flex-start;
+  flex-direction:column;
+  background:#0e0e12;
+  border:1px solid #2c2b33;
+  border-radius:12px;
+  transition:border-color .22s,background .22s,transform .22s;
+}
+body.view-home-index .el-refined .el-tool:hover {
+  border-color:#6c588e;
+  background:#14111a;
+  transform:translateY(-2px);
+}
+body.view-home-index .el-refined .el-tool-num {display:block;margin-bottom:22px;}
+body.view-home-index .el-refined .el-tool h3 {margin:0 0 9px;}
+body.view-home-index .el-refined .el-tool p {margin:0;max-width:36ch;line-height:1.7;}
+body.view-home-index .el-refined .el-footer {
+  width:min(1100px,calc(100% - 64px));
+  max-width:1100px;
+  margin:0 auto;
+  padding:21px 0 27px;
+  border-top:1px solid #292931;
+}
+
+/* DASHBOARD: 2×2 grid of real full-width cards; never inline-flex buttons. */
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  align-items:stretch;
+}
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid .ez-quick-action {
+  min-width:0;
+  min-height:108px;
+  width:100%;
+  margin:0;
+  padding:16px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:12px;
+  background:#121216;
+  border:1px solid #303038;
+  border-radius:10px;
+  text-decoration:none;
+  text-align:left;
+  color:#eaeaf0;
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
+  transition:border-color .2s,background .2s,transform .2s;
+}
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid .ez-quick-action:hover {
+  background:#19161f;
+  border-color:#725895;
+  transform:translateY(-2px);
+}
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid .ez-quick-action:focus-visible {
+  outline:2px solid #aa8dde;
+  outline-offset:3px;
+}
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid .action-icon {
+  flex:0 0 39px;
+  width:39px;
+  height:39px;
+  display:grid;
+  place-items:center;
+  margin:0;
+  background:#201b29;
+  color:#c5afe9;
+  border:1px solid #4b3a5e;
+  border-radius:9px;
+}
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid .action-icon svg {
+  width:20px;
+  height:20px;
+}
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid .ez-quick-action > div:last-child {
+  flex:1;
+  min-width:0;
+}
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid .action-text {
+  font-family:Inter,system-ui,sans-serif;
+  font-size:13px;
+  line-height:1.32;
+  font-weight:600;
+  color:#eeeeef;
+  letter-spacing:-.015em;
+}
+body.ez-has-workspace.view-student-dashboard .ez-quick-grid .action-sub {
+  margin-top:6px;
+  font-family:Inter,system-ui,sans-serif;
+  font-size:11px;
+  line-height:1.5;
+  color:#a1a1ad;
+  font-weight:400;
+  overflow-wrap:break-word;
+}
+@media(max-width:900px) {
+  body.view-home-index .el-refined .el-intro {
+    grid-template-columns:1fr;
+    min-height:auto;
+    gap:24px;
+    padding:56px 0 45px;
+  }
+  body.view-home-index .el-refined .el-intro-info p {max-width:64ch;}
+}
+@media(max-width:650px) {
+  body.view-home-index .el-refined .el-nav,
+  body.view-home-index .el-refined .el-main,
+  body.view-home-index .el-refined .el-footer {
+    width:calc(100% - 36px);
+  }
+  body.view-home-index .el-refined .el-intro {padding:42px 0 38px;}
+  body.view-home-index .el-refined .el-intro h1 {font-size:clamp(29px,7.3vw,39px);}
+  body.view-home-index .el-refined .el-intro-info p {
+    font-size:13px;
+    line-height:1.75;
+    text-align:left;
+    hyphens:none;
+  }
+  body.view-home-index .el-refined .el-tool-grid {grid-template-columns:1fr;gap:10px;}
+  body.view-home-index .el-refined .el-tool {min-height:135px;padding:19px;}
+  body.view-home-index .el-refined .el-tool-num {margin-bottom:15px;}
+  body.view-home-index .el-refined .el-tools {padding:37px 0 45px;}
+}
+@media(max-width:580px) {
+  body.ez-has-workspace.view-student-dashboard .ez-quick-grid {grid-template-columns:1fr;gap:9px;}
+  body.ez-has-workspace.view-student-dashboard .ez-quick-grid .ez-quick-action {min-height:76px;padding:13px 14px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  body.view-home-index .el-refined .el-tool,
+  body.ez-has-workspace.view-student-dashboard .ez-quick-grid .ez-quick-action {transition:none;}
+  body.view-home-index .el-refined .el-tool:hover,
+  body.ez-has-workspace.view-student-dashboard .ez-quick-grid .ez-quick-action:hover {transform:none;}
+}

@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Pristup odbijen";
 }
 
@@ -8,7 +8,7 @@
             --bg: #080C14;
             --card: #141D2B;
             --border: #1E2D42;
-            --accent: #00E5FF;
+            --accent: #bfc0c3;
             --text: #E8EDF5;
             --muted: #5A7090;
             --danger: #FF5252;
@@ -23,7 +23,7 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Nunito Sans',sans-serif;
+            font-family: 'DM Sans',sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -46,7 +46,7 @@
         }
 
         h1 {
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-size: 1.8rem;
             color: var(--danger);
             margin-bottom: 10px;
@@ -65,7 +65,7 @@
             color: var(--bg);
             border-radius: 8px;
             text-decoration: none;
-            font-family: 'Rajdhani',sans-serif;
+            font-family: 'Space Grotesk',sans-serif;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -79,7 +79,7 @@
 }
 
 <div class="card">
-    <div class="icon">🚫</div>
+    <div class="icon"><svg class="ui-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/></svg></div>
     <h1>Pristup odbijen</h1>
     <p>Nemate ovlaštenje za pristup ovoj stranici. Ova stranica nije namijenjena vašoj ulozi.</p>
     <a class="btn" asp-controller="Home" asp-action="Index">Nazad na početnu</a>

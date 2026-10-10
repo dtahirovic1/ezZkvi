@@ -5,14 +5,14 @@
 
 @section Styles {
 <style>
-  :root { --bg:#080C14;--surface:#0F1620;--card:#141D2B;--border:#1E2D42;--accent:#00E5FF;--amber:#FFB300;--text:#E8EDF5;--muted:#5A7090;--success:#00E676;--danger:#FF5252; }
+  :root { --bg:#080C14;--surface:#0F1620;--card:#141D2B;--border:#1E2D42;--accent:#bfc0c3;--amber:#d6d6d8;--text:#E8EDF5;--muted:#5A7090;--success:#00E676;--danger:#FF5252; }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--bg);color:var(--text);font-family:'Nunito Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 20px;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 20px;}
 
   .header{width:100%;max-width:640px;margin-bottom:28px;display:flex;align-items:center;gap:12px;}
   .back-link{padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:0.85rem;cursor:pointer;transition:all 0.2s;text-decoration:none;display:flex;align-items:center;gap:6px;}
   .back-link:hover{border-color:var(--accent);color:var(--accent);}
-  .page-title{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:1px;}
+  .page-title{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:1px;}
   .page-title span{color:var(--accent);}
   .page-sub{color:var(--muted);font-size:0.85rem;margin-top:4px;}
 
@@ -20,29 +20,29 @@
   .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:640px;margin-bottom:24px;}
   .type-card{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:22px;cursor:pointer;transition:all 0.2s;text-align:center;}
   .type-card:hover{border-color:var(--muted);}
-  .type-card.selected.suggest{border-color:var(--accent);background:rgba(0,229,255,0.05);}
+  .type-card.selected.suggest{border-color:var(--accent);background:rgba(194,194,198,0.05);}
   .type-card.selected.report{border-color:var(--amber);background:rgba(255,179,0,0.05);}
   .type-icon{font-size:2rem;margin-bottom:10px;}
-  .type-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:1px;}
+  .type-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:1px;}
   .type-desc{font-size:0.8rem;color:var(--muted);margin-top:4px;}
 
   .form-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;width:100%;max-width:640px;animation:fadeUp 0.4s ease both;}
-  .form-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+  .form-title{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
   .form-title::before{content:'';width:3px;height:14px;background:var(--accent);border-radius:2px;}
   .form-title.amber::before{background:var(--amber);}
 
   .form-group{margin-bottom:18px;}
   .field-error{ display:none; color:var(--danger); font-size:0.78rem; margin-top:6px; }
   label{display:block;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
-  input[type=text], textarea, select.inp{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'Nunito Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+  input[type=text], textarea, select.inp{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
   input[type=text]:focus, textarea:focus, select.inp:focus{border-color:var(--accent);}
   textarea{resize:vertical;min-height:90px;}
   .opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .opt-input{position:relative;}
   .opt-input input{padding-left:34px;}
-  .opt-label-abs{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--muted);font-size:0.82rem;}
+  .opt-label-abs{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--muted);font-size:0.82rem;}
   .correct-row{display:flex;gap:10px;}
-  .correct-opt{flex:1;padding:9px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;transition:all 0.2s;}
+  .correct-opt{flex:1;padding:9px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;transition:all 0.2s;}
   .correct-opt.selected{border-color:var(--success);background:rgba(0,230,118,0.08);color:var(--success);}
   .correct-opt:hover{border-color:var(--muted);}
 
@@ -59,9 +59,9 @@
   .file-remove{color:var(--danger);cursor:pointer;font-size:1rem;}
 
   .btn-row{display:flex;gap:12px;justify-content:flex-end;margin-top:24px;}
-  .btn{padding:12px 26px;border:none;border-radius:8px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.2s;}
+  .btn{padding:12px 26px;border:none;border-radius:8px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.2s;}
   .btn-primary{background:var(--accent);color:var(--bg);}
-  .btn-primary:hover{background:#fff;box-shadow:0 0 20px rgba(0,229,255,0.35);}
+  .btn-primary:hover{background:#fff;box-shadow:0 0 20px rgba(194,194,198,0.35);}
   .btn-secondary{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
   .btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
 
@@ -69,7 +69,7 @@
   #successScreen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;}
   .success-circle{width:90px;height:90px;border-radius:50%;border:3px solid var(--success);background:rgba(0,230,118,0.08);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 20px;animation:pop 0.5s ease both;}
   @@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
-  .success-title{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:var(--success);margin-bottom:8px;}
+  .success-title{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:var(--success);margin-bottom:8px;}
   .success-sub{color:var(--muted);font-size:0.9rem;}
 
   @@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -81,22 +81,14 @@
 </style>
 }
 
-<div class="header" id="mainContent">
-  <a class="back-link" asp-controller="Student" asp-action="Dashboard">← Nazad</a>
-  <div>
-    <div class="page-title">Pošalji <span>feedback</span></div>
-    <div class="page-sub">Pomozi nam da poboljšamo sadržaj platforme</div>
-  </div>
-</div>
-
 <div class="type-grid" id="typeGrid">
   <div class="type-card suggest" onclick="selectType('suggest', this)">
-    <div class="type-icon">💡</div>
+    <div class="type-icon"><svg class="ui-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M8.5 14c-1.6-1.2-2.5-2.7-2.5-4.5a6 6 0 0 1 12 0c0 1.8-.9 3.3-2.5 4.5l-.7 2H9.2l-.7-2Z"/></svg></div>
     <div class="type-name">Prijedlog pitanja</div>
     <div class="type-desc">Predloži novo pitanje za bazu</div>
   </div>
   <div class="type-card report" onclick="selectType('report', this)">
-    <div class="type-icon">🐛</div>
+    <div class="type-icon"><svg class="ui-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="13" rx="5"/><path d="M12 7V4m-4 0 4 3 4-3M4 11h3m10 0h3M4 17h3m10 0h3M12 11v9"/></svg></div>
     <div class="type-name">Prijava greške</div>
     <div class="type-desc">Prijavi grešku u sadržaju ili sistemu</div>
   </div>
@@ -285,14 +277,14 @@
     document.getElementById('typeGrid').style.display='none';
     document.getElementById('suggestForm').style.display='none';
     document.getElementById('reportForm').style.display='none';
-    document.querySelector('.header').style.display='none';
+    document.getElementById('ezPageHeader')?.classList.add('ez-feedback-sent');
     document.getElementById('successScreen').style.display='flex';
   }
   function resetForm(){
     document.getElementById('typeGrid').style.display='grid';
     document.getElementById('suggestForm').style.display='none';
     document.getElementById('reportForm').style.display='none';
-    document.querySelector('.header').style.display='flex';
+    document.getElementById('ezPageHeader')?.classList.remove('ez-feedback-sent');
     document.getElementById('successScreen').style.display='none';
     document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
     removeFile();

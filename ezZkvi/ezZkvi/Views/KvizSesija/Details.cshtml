@@ -1,10 +1,10 @@
-﻿@model ezZkvi.Models.KvizSesija
+@model ezZkvi.Models.KvizSesija
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalji kviz sesije";
 }
 
-<h1>Details</h1>
+<h1>Detalji kviz sesije</h1>
 
 <div>
     <h4>KvizSesija</h4>
@@ -31,6 +31,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.ID">Uredi</a> |
+    <a asp-action="Index">Nazad na pregled</a>
 </div>

@@ -9,17 +9,17 @@
 
 @section Styles {
 <style>
-  :root { --bg:#080C14;--surface:#0F1620;--card:#141D2B;--border:#1E2D42;--accent:#00E5FF;--amber:#FFB300;--text:#E8EDF5;--muted:#5A7090;--success:#00E676;--danger:#FF5252; }
+  :root { --bg:#080C14;--surface:#0F1620;--card:#141D2B;--border:#1E2D42;--accent:#bfc0c3;--amber:#d6d6d8;--text:#E8EDF5;--muted:#5A7090;--success:#00E676;--danger:#FF5252; }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--bg);color:var(--text);font-family:'Nunito Sans',sans-serif;min-height:100vh;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
   .layout{display:flex;min-height:100vh;}
 
   .sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);padding:24px 0;display:flex;flex-direction:column;flex-shrink:0;transition:transform 0.3s ease;}
-  .logo{font-family:'Rajdhani',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:2px;color:var(--text);padding:0 24px 24px;border-bottom:1px solid var(--border);text-decoration:none;display:block;}
+  .logo{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:2px;color:var(--text);padding:0 24px 24px;border-bottom:1px solid var(--border);text-decoration:none;display:block;}
   .logo span{color:var(--accent);}
   .nav{padding:20px 12px;flex:1;}
   .nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--muted);margin-bottom:4px;transition:all 0.2s;text-decoration:none;position:relative;}
-  .nav-item:hover,.nav-item.active{background:rgba(0,229,255,0.08);color:var(--accent);}
+  .nav-item:hover,.nav-item.active{background:rgba(194,194,198,0.08);color:var(--accent);}
   .nav-item .ico{font-size:1rem;width:20px;text-align:center;}
   .badge{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--danger);color:white;font-size:0.65rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;}
   .user-card{margin:12px;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;color:var(--text);}
@@ -31,7 +31,7 @@
 
   .main{flex:1;padding:28px;overflow-y:auto;}
   .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
-  .page-title{font-family:'Rajdhani',sans-serif;font-size:1.7rem;font-weight:700;}
+  .page-title{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;}
   .page-title span{color:var(--accent);}
   .notif-btn{padding:9px 18px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--muted);font-size:0.85rem;transition:all 0.2s;display:flex;align-items:center;gap:8px;text-decoration:none;}
   .notif-btn:hover{border-color:var(--accent);color:var(--accent);}
@@ -44,14 +44,14 @@
   .stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;animation:fadeUp 0.5s ease both;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;color:var(--text);}
   .stat:hover{border-color:var(--accent);transform:translateY(-2px);}
   .stat:nth-child(2){animation-delay:.1s}.stat:nth-child(3){animation-delay:.2s}.stat:nth-child(4){animation-delay:.3s}
-  .stat-val{font-family:'Rajdhani',sans-serif;font-size:2rem;font-weight:700;}
+  .stat-val{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;}
   .stat-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px;}
   .stat-trend{font-size:0.78rem;margin-top:6px;}
   .up{color:var(--success)}.dn{color:var(--danger)}.neu{color:var(--muted)}
 
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
   .section-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;animation:fadeUp 0.5s ease 0.2s both;}
-  .sec-title{font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .sec-title{font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
   .sec-title::before{content:'';width:3px;height:12px;background:var(--accent);border-radius:2px;}
 
 
@@ -59,10 +59,10 @@
   .item-row:last-child{border-bottom:none;}
   .item-name{font-size:0.88rem;font-weight:600;}
   .item-sub{font-size:0.75rem;color:var(--muted);margin-top:1px;}
-  .item-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.95rem;color:var(--accent);}
+  .item-val{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.95rem;color:var(--accent);}
   .pend-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
   .pend-item:last-child{border-bottom:none;}
-  .av-sm{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.1);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent);font-size:0.75rem;flex-shrink:0;}
+  .av-sm{width:30px;height:30px;border-radius:50%;background:rgba(194,194,198,0.1);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--accent);font-size:0.75rem;flex-shrink:0;}
   .pend-actions{display:flex;gap:6px;margin-left:auto;}
   .pa-btn{padding:4px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;border:1px solid;transition:all 0.2s;background:transparent;}
   .pa-ok{border-color:var(--success);color:var(--success);}
@@ -79,7 +79,7 @@
   .toast{position:fixed;top:24px;right:24px;z-index:200;padding:12px 24px;border-radius:10px;font-size:0.85rem;font-weight:600;transform:translateX(120%);transition:transform 0.4s ease;}
   .toast.show{transform:translateX(0);}
   .toast.success{background:rgba(0,230,118,0.15);border:1px solid var(--success);color:var(--success);}
-  .toast.info{background:rgba(0,229,255,0.15);border:1px solid var(--accent);color:var(--accent);}
+  .toast.info{background:rgba(194,194,198,0.15);border:1px solid var(--accent);color:var(--accent);}
 
   .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9;}
 
@@ -103,31 +103,10 @@
 }
 
 <div class="layout">
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-  <div class="sidebar" id="sidebar">
-    <a class="logo" asp-controller="@logoController" asp-action="Dashboard">ez<span>Zkvi</span></a>
-    <nav class="nav">
-      <a class="nav-item active" asp-controller="Administrator" asp-action="Dashboard"><span class="ico">⊞</span> Dashboard</a>
-      <a class="nav-item" asp-controller="Administrator" asp-action="Users"><span class="ico">👥</span> Korisnici @if (ViewBag.BrojNaCekanju > 0) { <span class="badge">@ViewBag.BrojNaCekanju</span> }</a>
-      <a class="nav-item" asp-controller="Content" asp-action="Index"><span class="ico">📝</span> Sadržaj</a>
-      <a class="nav-item" asp-controller="Leaderboard" asp-action="Index"><span class="ico">🏆</span> Leaderboard</a>
-      <a class="nav-item" asp-controller="Feedback" asp-action="Index"><span class="ico">💬</span> Feedback @if (ViewBag.NeobradeniFeedback > 0) { <span class="badge">@ViewBag.NeobradeniFeedback</span> }</a>
-      <a class="nav-item" asp-controller="Administrator" asp-action="EmailObavijest"> <span class="ico">📧</span> Obavijesti</a>
-  </nav>
-    <form asp-controller="Account" asp-action="Logout" method="post" class="user-card-logout-form">
-      @Html.AntiForgeryToken()
-      <button type="submit" class="user-card user-card-logout-btn">
-        <div class="user-name">@userName</div>
-        <div class="user-role">Administrator</div>
-        <div class="logout-hint">Klikni za odjavu →</div>
-      </button>
-    </form>
-  </div>
-
   <main class="main">
     <div class="topbar">
       <div style="display:flex;align-items:center;gap:12px">
-        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        
         <div class="page-title">Admin <span>panel</span></div>
       </div>
       <div style="display:flex;gap:10px">
@@ -227,7 +206,7 @@
         @foreach (var a in ViewBag.NedavniKvizovi)
         {
           <div class="log-item">
-            <span class="log-icon">📝</span>
+            <span class="log-icon"><svg class="ui-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-8M10 14l-1 4 4-1 8-8-3-3-8 8ZM16 8l3 3"/></svg></span>
             <div>
               <div class="log-text"><strong>@a.Korisnik</strong> završio kviz iz <strong>@a.Predmet</strong> — @a.Procenat%</div>
               <div class="log-time">@a.Datum.ToLocalTime().ToString("dd.MM.yyyy. HH:mm")</div>
@@ -243,10 +222,7 @@
 
 @section Scripts {
 <script>
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('sidebarOverlay').classList.toggle('open');
-  }
+
 
   function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');

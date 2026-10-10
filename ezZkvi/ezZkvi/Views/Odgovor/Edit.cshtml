@@ -1,10 +1,10 @@
-﻿@model ezZkvi.Models.Odgovor
+@model ezZkvi.Models.Odgovor
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Uređivanje odgovora";
 }
 
-<h1>Edit</h1>
+<h1>Uređivanje odgovora</h1>
 
 <h4>Odgovor</h4>
 <hr />
@@ -29,14 +29,14 @@
                 <span asp-validation-for="PitanjeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Sačuvaj" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Nazad na pregled</a>
 </div>
 
 @section Scripts {
