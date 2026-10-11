@@ -7,7 +7,6 @@
 
     var roleText = User.IsInRole("Admin") ? "Admin" : "Moderator";
     var backController = User.IsInRole("Admin") ? "Administrator" : "Moderator";
-    var selectedTezina = ViewData["Tezina"]?.ToString();
     var activeTab = (ViewData["ActiveTab"]?.ToString() ?? "questions").ToLowerInvariant();
     var odgovoriPoPitanju = ViewBag.OdgovoriPoPitanju as Dictionary<int, List<Odgovor>> ?? new Dictionary<int, List<Odgovor>>();
 }

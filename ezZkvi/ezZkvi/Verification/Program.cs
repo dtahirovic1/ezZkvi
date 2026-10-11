@@ -55,7 +55,30 @@ try {
         await db.Database.ExecuteSqlRawAsync("INSERT INTO \"AspNetUsers\" (\"Id\",\"UserName\",\"NormalizedUserName\",\"EmailConfirmed\",\"PhoneNumberConfirmed\",\"TwoFactorEnabled\",\"LockoutEnabled\",\"AccessFailedCount\",\"IsApproved\",\"Discriminator\") VALUES ('legacy','legacy','LEGACY',true,false,false,false,0,true,'Korisnik')");
         await db.Database.ExecuteSqlRawAsync("INSERT INTO \"Predmet\" (\"Id\",\"Naziv\") VALUES (1,'DM'),(2,'TP'); INSERT INTO \"Oblast\" (\"Id\",\"Naziv\",\"PredmetId\") VALUES (1,'DM oblast',1),(2,'TP oblast',2)");
         await db.Database.ExecuteSqlRawAsync("INSERT INTO \"KvizSesija\" (\"TraziBrojPitanja\",\"VremenskoOgranicenje\",\"Status\",\"StudentId\",\"PredmetId\",\"OblastId\",\"BrojTacnih\",\"Procenat\",\"DatumPocetka\",\"DatumZavrsetka\") SELECT 5,3,1,'legacy',1,1,4,80,NOW()-interval '10 days'+i*interval '1 day',NOW()-interval '10 days'+i*interval '1 day' FROM generate_series(1,7) i");
+        await db.Database.ExecuteSqlRawAsync("""
+            INSERT INTO "AspNetRoles" ("Id", "Name", "NormalizedName") VALUES ('legacy-role', 'LegacyRole', 'LEGACYROLE');
+            INSERT INTO "AspNetUsers" ("Id", "UserName", "NormalizedUserName", "PasswordHash", "SecurityStamp", "EmailConfirmed", "PhoneNumberConfirmed", "TwoFactorEnabled", "LockoutEnabled", "AccessFailedCount", "IsApproved", "Discriminator")
+            SELECT 'legacy-' || lower(kind), kind, upper(kind), 'preserved-hash', 'preserved-stamp', true, false, false, false, 0, true, kind
+            FROM (VALUES ('Administrator'), ('Moderator'), ('Student')) kinds(kind);
+            INSERT INTO "AspNetUserRoles" ("UserId", "RoleId") SELECT "Id", 'legacy-role' FROM "AspNetUsers" WHERE "Id" LIKE 'legacy-%';
+            """);
+        await db.Database.ExecuteSqlRawAsync("UPDATE \"AspNetUsers\" SET \"Student_BrojTacnihOdgovora\" = 1 WHERE \"Id\" = 'legacy-student'");
+        var legacyCountersProtected = false;
+        try { await db.Database.MigrateAsync(); }
+        catch (PostgresException ex) when (ex.SqlState == "P0001") { legacyCountersProtected = true; }
+        Check(legacyCountersProtected, "Inheritance migration refuses to discard nonzero legacy counters");
+        Check(await db.Database.SqlQueryRaw<int>("SELECT \"Student_BrojTacnihOdgovora\" AS \"Value\" FROM \"AspNetUsers\" WHERE \"Id\" = 'legacy-student'").SingleAsync() == 1,
+            "Refused migration leaves legacy counter data intact");
+        await db.Database.ExecuteSqlRawAsync("UPDATE \"AspNetUsers\" SET \"Student_BrojTacnihOdgovora\" = 0 WHERE \"Id\" = 'legacy-student'");
         await db.Database.MigrateAsync();
+        Check(await db.Users.CountAsync(u => u.Id.StartsWith("legacy-") && u.PasswordHash == "preserved-hash" && u.SecurityStamp == "preserved-stamp" && u.IsApproved) == 3, "Inheritance cleanup preserves all derived user accounts and credentials");
+        Check(await db.UserRoles.CountAsync(r => r.RoleId == "legacy-role") == 3, "Inheritance cleanup preserves Identity roles");
+        await db.GetService<IMigrator>().MigrateAsync("20261011091208_AddScoreAndAdminControls");
+        Check(await db.Database.SqlQueryRaw<string>("SELECT \"Discriminator\" AS \"Value\" FROM \"AspNetUsers\" WHERE \"Id\" = 'legacy-student'").SingleAsync() == "Korisnik",
+            "Inheritance rollback restores readable base-user discriminators");
+        Check(await db.UserRoles.CountAsync(r => r.RoleId == "legacy-role") == 3, "Inheritance rollback preserves Identity roles");
+        await db.Database.MigrateAsync();
+
         Check(await db.KvizSesije.CountAsync(s=>s.StudentId=="legacy")==5,"Migration keeps latest five legacy results");
         var totals=await db.StudentStatistike.SingleAsync();
         Check(totals.UkupnoPitanja==35&&totals.TacniOdgovori==28&&totals.BrojKvizova==7,"Migration preserves lifetime totals before pruning");
@@ -241,7 +264,7 @@ try {
         Check(!await db.Predmet.AnyAsync()&&!await db.KvizSesije.AnyAsync()&&!await db.StudentStatistike.AnyAsync(),"Bulk subject deletion removes sessions and aggregate statistics");
     }
     Console.WriteLine($"Completed: {passed} checks passed against isolated PostgreSQL database.");
-    if (args.Contains("--serve")) {
+    if (args.Contains("--serve") || args.Contains("--http-checks")) {
         using var identityProvider=identityServices.BuildServiceProvider();
         using var scope=identityProvider.CreateScope();
         var manager=scope.ServiceProvider.GetRequiredService<UserManager<Korisnik>>();
@@ -249,6 +272,10 @@ try {
         await roles.CreateAsync(new IdentityRole("Admin"));
         var user=new Korisnik{UserName="verification-admin",Email="verification-admin@example.invalid",EmailConfirmed=true,IsApproved=true};
         await manager.CreateAsync(user,"Verification1!");await manager.AddToRoleAsync(user,"Admin");
+        await roles.CreateAsync(new IdentityRole("Moderator"));
+        var moderator = new Korisnik { UserName = "verification-moderator", Email = "verification-moderator@example.invalid", EmailConfirmed = true, IsApproved = true };
+        await manager.CreateAsync(moderator, "Verification1!");
+        await manager.AddToRoleAsync(moderator, "Moderator");
         await using(var db=Db()) {
             var subject=new Predmet{Naziv="Diskretna matematika"};var area=new Oblast{Naziv="Logika",Predmet=subject};
             db.Predmet.Add(subject);db.Oblast.Add(area);
@@ -270,7 +297,7 @@ try {
             Console.WriteLine("UI verification server starting at http://127.0.0.1:5287. Create Verification/stop-ui to stop and remove test database.");
             await HttpChecks.Run(Check);
             Console.WriteLine($"Completed: {passed} integration and HTTP checks.");
-            while (!File.Exists("Verification/stop-ui") && !server.HasExited) await Task.Delay(500);
+            while (!args.Contains("--http-checks") && !File.Exists("Verification/stop-ui") && !server.HasExited) await Task.Delay(500);
             if (server.HasExited) throw new Exception("Verification web server exited: " + await errors);
         } finally {
             if(!server.HasExited) server.Kill(entireProcessTree:true);

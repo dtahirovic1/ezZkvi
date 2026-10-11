@@ -124,11 +124,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     string[] roles = { "Admin", "Moderator", "Student" };
@@ -141,70 +138,6 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    var stareOpceniteOblasti = await db.Oblast
-        .Where(o => o.Naziv == "Općenito" || o.Naziv == "Opcenito" || o.Naziv == "općenito" || o.Naziv == "opcenito")
-        .ToListAsync();
-
-    if (stareOpceniteOblasti.Count > 0)
-    {
-        foreach (var oblast in stareOpceniteOblasti)
-        {
-            oblast.Naziv = "Oblast 1";
-        }
-
-        await db.SaveChangesAsync();
-    }
-
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Korisnik>>();
-
-    async Task SeedUserAsync(string email, string password, string role)
-    {
-        var user = await userManager.FindByEmailAsync(email);
-
-        if (user == null)
-        {
-            user = new Korisnik
-            {
-                UserName = email,
-                Email = email,
-                EmailConfirmed = true,
-                IsApproved = true
-            };
-
-            var result = await userManager.CreateAsync(user, password);
-
-            if (!result.Succeeded)
-            {
-                throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
-            }
-        }
-        else
-        {
-            user.EmailConfirmed = true;
-            user.IsApproved = true;
-
-            var updateResult = await userManager.UpdateAsync(user);
-
-            if (!updateResult.Succeeded)
-            {
-                throw new Exception(string.Join(", ", updateResult.Errors.Select(e => e.Description)));
-            }
-        }
-
-        if (!await userManager.IsInRoleAsync(user, role))
-        {
-            var roleResult = await userManager.AddToRoleAsync(user, role);
-
-            if (!roleResult.Succeeded)
-            {
-                throw new Exception(string.Join(", ", roleResult.Errors.Select(e => e.Description)));
-            }
-        }
-    }
-
-    await SeedUserAsync("admin@ezzkvi.ba", "Admin123!", "Admin");
-    await SeedUserAsync("moderator@ezzkvi.ba", "Moderator123!", "Moderator");
-    await SeedUserAsync("student@ezzkvi.ba", "Student123!", "Student");
 }
 
 app.Run();

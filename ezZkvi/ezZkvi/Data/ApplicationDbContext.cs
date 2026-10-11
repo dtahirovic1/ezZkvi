@@ -22,9 +22,6 @@ namespace ezZkvi.Data
         public DbSet<KvizSesijaPitanje> KvizSesijaPitanja { get; set; }
         public DbSet<StudentStatistika> StudentStatistike { get; set; }
 
-        public DbSet<ezZkvi.Models.Administrator> Administrator { get; set; } = default!;
-        public DbSet<ezZkvi.Models.Moderator> Moderator { get; set; } = default!;
-        public DbSet<ezZkvi.Models.Student> Student { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

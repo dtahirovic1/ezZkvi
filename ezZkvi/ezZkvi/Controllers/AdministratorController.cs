@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace ezZkvi.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -16,11 +15,6 @@ namespace ezZkvi.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<Korisnik> _userManager;
         private readonly IEmailService _emailService;
-
-        private bool AdministratorExists(string id)
-        {
-            return _context.Administrator.Any(e => e.Id == id);
-        }
 
         public AdministratorController(
             ApplicationDbContext context,
@@ -443,45 +437,5 @@ namespace ezZkvi.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
-        public IActionResult Details(string id)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Create()
-        {
-            return Forbid();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Administrator administrator)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Edit(string id)
-        {
-            return Forbid();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(string id, Administrator administrator)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Delete(string id)
-        {
-            return Forbid();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(string id)
-        {
-            return Forbid();
-        }
     }
 }

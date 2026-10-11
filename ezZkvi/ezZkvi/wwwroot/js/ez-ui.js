@@ -50,14 +50,5 @@
       sectionTargets.forEach(el => observer.observe(el));
     }
 
-    // Synchronize accessible mobile menu state with the existing dashboard JS.
-    const toggle = document.querySelector('.layout .menu-toggle');
-    const sidebar = document.getElementById('sidebar');
-    if (toggle && sidebar) {
-      const sync = () => toggle.setAttribute('aria-expanded', String(sidebar.classList.contains('open')));
-      toggle.addEventListener('click', () => requestAnimationFrame(sync));
-      document.getElementById('sidebarOverlay')?.addEventListener('click', () => requestAnimationFrame(sync));
-      document.querySelectorAll('.sidebar .nav-item').forEach((item) => item.addEventListener('click', sync));
-    }
   });
 })();

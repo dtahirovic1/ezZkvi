@@ -5,7 +5,6 @@ using ezZkvi.ViewModels;
 using ezZkvi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ezZkvi.Controllers
@@ -124,7 +123,6 @@ namespace ezZkvi.Controllers
                 pitanjaQuery = pitanjaQuery.Where(p => dozvoljeni.Contains(p.PredmetId));
             }
 
-
             var predmetiQuery = _context.Predmet.AsQueryable();
             if (dozvoljeni != null)
             {
@@ -141,24 +139,6 @@ namespace ezZkvi.Controllers
                 .ThenBy(o => o.Naziv)
                 .ToListAsync();
 
-            var oblastiSelect = oblasti
-                .Select(o => new
-                {
-                    o.Id,
-                    Naziv = (o.Predmet != null ? o.Predmet.Naziv : "Predmet") + " / " + o.Naziv
-                })
-                .ToList();
-
-            ViewData["Predmeti"] = new SelectList(predmeti, "Id", "Naziv");
-            ViewData["AreaPredmeti"] = new SelectList(predmeti, "Id", "Naziv");
-            ViewData["OblastiFilter"] = new SelectList(oblastiSelect, "Id", "Naziv");
-            ViewData["Search"] = string.Empty;
-            ViewData["AreaSearch"] = string.Empty;
-            ViewData["AreaPredmetId"] = null;
-            ViewData["SubjectSearch"] = string.Empty;
-            ViewData["Tezina"] = null;
-            ViewData["OblastId"] = null;
-
             ViewBag.OblastiListaZaSelect = oblasti.Select(o => new
             {
                 o.Id,
@@ -174,7 +154,6 @@ namespace ezZkvi.Controllers
                 .ToDictionaryAsync(x => x.PredmetId, x => x.Broj);
 
             var predmetiZaPrikaz = predmeti.AsEnumerable();
-
 
             ViewBag.PredmetiLista = predmetiZaPrikaz
                 .Select(p => new PredmetAktivnostItem
@@ -193,7 +172,6 @@ namespace ezZkvi.Controllers
                 .ToDictionaryAsync(x => x.OblastId, x => x.Broj);
 
             var oblastiZaPrikaz = oblasti.AsEnumerable();
-
 
             ViewBag.OblastiLista = oblastiZaPrikaz
                 .Select(o => new OblastAktivnostItem

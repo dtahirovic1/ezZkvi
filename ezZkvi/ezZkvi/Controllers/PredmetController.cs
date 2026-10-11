@@ -432,45 +432,5 @@ namespace ezZkvi.Controllers
             return RedirectNaContentPredmete();
         }
 
-        public IActionResult Details(int? id)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Create()
-        {
-            return Forbid();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Naziv")] Predmet predmet)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Edit(int? id)
-        {
-            return Forbid();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Naziv")] Predmet predmet)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Delete(int? id)
-        {
-            return Forbid();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            return Forbid();
-        }
     }
 }

@@ -122,23 +122,5 @@ namespace ezZkvi.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
-        public IActionResult Details(string id) => Forbid();
-        public IActionResult Create() => Forbid();
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Moderator moderator) => Forbid();
-
-        public IActionResult Edit(string id) => Forbid();
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(string id, Moderator moderator) => Forbid();
-
-        public IActionResult Delete(string id) => Forbid();
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id) => Forbid();
     }
 }

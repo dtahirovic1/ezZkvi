@@ -353,11 +353,6 @@
 
 @section Scripts {
 <script>
-  const DEMO_USERS = {
-    'student':   { name: 'Ahmed Spahić',    username: 'ahmed',  role: 'student',   avatar: 'AS' },
-    'moderator': { name: 'Amila Duraković', username: 'amila', role: 'moderator', avatar: 'AD' },
-    'admin':     { name: 'Zlatan Avdić',     username: 'zlatan',role: 'admin',     avatar: 'ZA' }
-  };
 
   function togglePass(btn) {
     const input = btn.previousElementSibling;
@@ -373,23 +368,9 @@
     clearErrors();
   }
 
-  function showError(id) {
-    const el = document.getElementById(id);
-    el.classList.add('show');
-    const inp = el.previousElementSibling;
-    if (inp && inp.tagName === 'INPUT') inp.classList.add('error');
-  }
-
   function clearErrors() {
     document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
     document.querySelectorAll('input').forEach(e => e.classList.remove('error'));
-  }
-
-  function showToast(msg, type='success') {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.className = 'toast ' + type;
-    setTimeout(() => t.classList.add('show'), 10);
-    setTimeout(() => t.classList.remove('show'), 3500);
   }
 
   function checkStrength(pass) {
@@ -401,64 +382,6 @@
     else if (pass.length < 10) { bar.classList.add('medium'); label.textContent = 'Srednja'; label.style.color = 'var(--amber)'; }
     else { bar.classList.add('strong'); label.textContent = 'Jaka'; label.style.color = 'var(--success)'; }
   }
-
-  function handleLogin() {
-    clearErrors();
-    const user = document.getElementById('loginUser').value.trim();
-    const pass = document.getElementById('loginPass').value;
-    let valid = true;
-    if (!user) { showError('loginUserErr'); valid = false; }
-    if (!pass) { showError('loginPassErr'); valid = false; }
-    if (!valid) return;
-
-    const btn = document.getElementById('loginBtn');
-    btn.classList.add('loading'); btn.disabled = true;
-
-    setTimeout(() => {
-      showToast('Dobrodošao!');
-      setTimeout(() => window.location.href = '/Student/Dashboard', 600);
-    }, 800);
-  }
-
-  function demoLogin(role) {
-    showToast('Demo pristup: ' + role);
-    setTimeout(() => {
-      if (role === 'moderator') window.location.href = '/Moderator/Dashboard';
-      else if (role === 'admin') window.location.href = '/Administrator/Dashboard';
-      else window.location.href = '/Student/Dashboard';
-    }, 700);
-  }
-
-  function handleRegister() {
-    clearErrors();
-    const name = document.getElementById('regName').value.trim();
-    const user = document.getElementById('regUser').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const pass = document.getElementById('regPass').value;
-    const passC = document.getElementById('regPassConfirm').value;
-    let valid = true;
-    if (!name) { showError('regNameErr'); valid = false; }
-    if (!user) { showError('regUserErr'); valid = false; }
-    if (!/^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(email)) { showError('regEmailErr'); valid = false; }
-    if (pass.length < 8) { showError('regPassErr'); valid = false; }
-    if (pass !== passC) { showError('regPassConfirmErr'); valid = false; }
-    if (!valid) return;
-
-    const btn = document.getElementById('regBtn');
-    btn.classList.add('loading'); btn.disabled = true;
-    setTimeout(() => {
-      btn.classList.remove('loading'); btn.disabled = false;
-      showToast('Registracija (demo) — backend još nije povezan');
-      setTimeout(() => switchTab('login'), 2000);
-    }, 1500);
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      if (document.getElementById('login').classList.contains('active')) handleLogin();
-      else handleRegister();
-    }
-  });
 
   if ('@activeTab' === 'register') document.body.classList.add('compact-mode');
 </script>

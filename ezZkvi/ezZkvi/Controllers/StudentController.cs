@@ -20,7 +20,6 @@ namespace ezZkvi.Controllers
         private const int VremenskoOgranicenjeMinuta = 15;
         private const decimal PoeniZaTacanOdgovor = 0.15m;
         private const decimal PoeniZaNetacanOdgovor = -0.05m;
-        private const decimal MaksimalanBrojPoena = SistemskiBrojPitanja * PoeniZaTacanOdgovor;
         private const double OznakaPreskocenogPitanja = -1;
 
         public StudentController(ApplicationDbContext context, ScoreService score)
@@ -365,7 +364,6 @@ namespace ezZkvi.Controllers
                 }).ToList()
             };
         }
-
 
         private async Task AzurirajStudentStatistikuAsync(KvizSesija sesija, int ukupnoPitanja, int tacno)
         {
@@ -930,20 +928,6 @@ namespace ezZkvi.Controllers
                 .Include(s => s.Oblast)
                 .FirstAsync(s => s.ID == submitModel.KvizSesijaId);
 
-            var model = new SimulacijaKvizaViewModel
-            {
-                KvizSesijaId = sesija.ID,
-                PredmetId = sesija.PredmetId,
-                PredmetNaziv = sesija.Predmet?.Naziv ?? "Odabrani predmet",
-                OblastId = sesija.OblastId,
-                OblastNaziv = sesija.Oblast?.Naziv,
-                BrojPitanja = rezultat.UkupnoPitanja,
-                VremenskoOgranicenjeMinuta = sesija.VremenskoOgranicenje,
-                Result = rezultat,
-                Predmeti = await GetPredmetiZaSimulacijuAsync(sesija.PredmetId),
-                Oblasti = await GetOblastiZaSimulacijuAsync(sesija.OblastId)
-            };
-
             return RedirectToAction(nameof(SimulationResult), new { id = sesija.ID });
         }
 
@@ -1056,45 +1040,5 @@ namespace ezZkvi.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
-        public IActionResult Details(string id)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Create()
-        {
-            return Forbid();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Student student)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Edit(string id)
-        {
-            return Forbid();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(string id, Student student)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Delete(string id)
-        {
-            return Forbid();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(string id)
-        {
-            return Forbid();
-        }
     }
 }

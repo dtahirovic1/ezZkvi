@@ -523,7 +523,6 @@
         }
 
         // Rangiranje uvijek dolazi sa servera.
-        function applySort(entries) { return entries; } // Backend supplies the canonical ranking.
 
         function render() {
           var c = document.getElementById('lbContent');
@@ -547,7 +546,7 @@
           if (!entries || entries.length === 0){
             return '<div class="table-wrap" style="padding:40px;text-align:center;color:var(--muted)">Još nema rezultata. Uradi prvi kviz da se pojaviš na rang listi!</div>';
           }
-          var sorted = applySort(entries);
+          var sorted = entries;
           let html = '';
           if (sorted.length >= 3){
             html += '<div class="podium">'

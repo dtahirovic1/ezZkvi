@@ -143,23 +143,6 @@ namespace ezZkvi.Controllers
             return RedirectNaContentPitanja();
         }
 
-        public IActionResult Details(int? id)
-        {
-            return Forbid();
-        }
-
-        public IActionResult Create()
-        {
-            return Forbid();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(PitanjeSaOdgovorimaViewModel model)
-        {
-            return Forbid();
-        }
-
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -243,11 +226,6 @@ namespace ezZkvi.Controllers
 
             TempData["Success"] = "Pitanje je ažurirano.";
             return RedirectNaContentPitanja();
-        }
-
-        public IActionResult Delete(int? id)
-        {
-            return Forbid();
         }
 
         [HttpPost, ActionName("Delete")]

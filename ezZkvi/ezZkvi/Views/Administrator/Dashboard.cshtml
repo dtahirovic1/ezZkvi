@@ -219,39 +219,3 @@
 </div>
 
 <div class="toast" id="toast"></div>
-
-@section Scripts {
-<script>
-
-
-  function showToast(msg, type = 'success') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast ' + type;
-    setTimeout(() => t.classList.add('show'), 10);
-    setTimeout(() => t.classList.remove('show'), 3500);
-  }
-
-  function approvePending(id) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.style.opacity = '0';
-      el.style.transform = 'translateX(20px)';
-      el.style.transition = 'all 0.3s';
-      setTimeout(() => el.remove(), 300);
-      showToast('Korisnik odobren!', 'success');
-    }
-  }
-
-  function rejectPending(id) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.style.opacity = '0';
-      el.style.transform = 'translateX(20px)';
-      el.style.transition = 'all 0.3s';
-      setTimeout(() => el.remove(), 300);
-      showToast('Zahtjev odbijen', 'info');
-    }
-  }
-</script>
-}

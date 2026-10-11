@@ -10,11 +10,6 @@ namespace ezZkvi.ViewModels
 
         public double Score { get; set; }
 
-        // Legacy XP fields
-        public int Nivo { get; set; }
-        public int XpUkupno { get; set; }
-        public int XpUNivou { get; set; }            // bodovi unutar trenutnog nivoa (0-99)
-        public int XpZaNivo { get; set; } = 100;     // koliko XP treba za sljedeći nivo
 
         public List<NedavnaAktivnostViewModel> NedavneAktivnosti { get; set; } = new();
         public List<PredmetNapredakViewModel> MojiPredmeti { get; set; } = new();
