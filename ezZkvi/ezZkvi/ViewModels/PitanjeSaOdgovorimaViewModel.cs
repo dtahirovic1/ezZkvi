@@ -17,6 +17,7 @@ namespace ezZkvi.ViewModels
         [Range(1, int.MaxValue, ErrorMessage = "Oblast je obavezna.")]
         public int OblastId { get; set; }
 
+        [EnumDataType(typeof(Tezina), ErrorMessage = "Odaberite važeću težinu pitanja.")]
         public Tezina Tezina { get; set; }
 
         [Required(ErrorMessage = "Odgovor 1 je obavezan.")]

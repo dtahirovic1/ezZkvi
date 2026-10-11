@@ -11,6 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Verification/**" />
+    <Content Remove="Verification/**" />
+    <None Remove="Verification/**" />
     <Content Remove="Views\Student\Delete.cshtml" />
   </ItemGroup>
 

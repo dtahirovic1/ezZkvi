@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.TekstPitanja)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Tezina)
+                @DifficultyNames.Display(item.Tezina)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Predmet.Id)

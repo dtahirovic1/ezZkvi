@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Leaderboard";
 
-    string PctBoja(int pct) => pct >= 80 ? "var(--success)" : (pct >= 60 ? "var(--amber)" : "var(--danger)");
+
 }
 
 @section Styles {
@@ -254,7 +254,7 @@
 
         .table-header {
             display: grid;
-            grid-template-columns: 60px 1fr 100px 100px 100px;
+            grid-template-columns: 100px minmax(0, 1fr) 100px;
             padding: 12px 20px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -266,7 +266,7 @@
 
         .table-row {
             display: grid;
-            grid-template-columns: 60px 1fr 100px 100px 100px;
+            grid-template-columns: 100px minmax(0, 1fr) 100px;
             padding: 14px 20px;
             border-bottom: 1px solid var(--border);
             align-items: center;
@@ -327,6 +327,7 @@
         }
 
         .user-n {
+            overflow-wrap: anywhere;
             font-weight: 600;
             font-size: 0.9rem;
         }
@@ -409,12 +410,8 @@
             }
 
             .table-header, .table-row {
-                grid-template-columns: 50px 1fr 80px 80px;
+                grid-template-columns: 80px minmax(0, 1fr) 65px;
             }
-
-                .table-header > :last-child, .table-row > :last-child {
-                    display: none;
-                }
         }
     </style>
 }
@@ -426,7 +423,7 @@
         }
         <a class="back-link" asp-controller="@backController" asp-action="Dashboard" style="margin-bottom:12px;display:inline-flex">← Nazad</a>
         <div class="page-title"><svg class="ui-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10v7a5 5 0 0 1-10 0V3ZM7 5H4v2a4 4 0 0 0 4 4M17 5h3v2a4 4 0 0 1-4 4M12 15v4M8 21h8M10 19h4"/></svg> Leader<span>board</span></div>
-        <div class="page-sub">Rang lista prema tačnosti</div>
+        <div class="page-sub">Rang lista prema Scoreu</div>
     </div>
 </div>
 
@@ -453,12 +450,7 @@
                     </div>
                 }
 
-<div class="sort-bar">
-    <span class="sort-label">Sortiraj:</span>
-    <button class="sort-btn active" onclick="sortBy('pct', this)">Tačnost</button>
-    <button class="sort-btn" onclick="sortBy('score', this)">Bodovi</button>
-    <button class="sort-btn" onclick="sortBy('quizzes', this)">Kvizovi</button>
-</div>
+
 
 <div id="lbContent">
     @if (!Model.Entries.Any())
@@ -475,19 +467,19 @@
                 <div class="podium-item">
                     <div class="avatar silver">@Model.Entries[1].Inicijali</div>
                     <div class="podium-name">@Model.Entries[1].Ime</div>
-                    <div class="podium-score" style="color:var(--silver)">@Model.Entries[1].Bodovi</div>
+                    <div class="podium-score" style="color:var(--silver)">@Model.Entries[1].DisplayScore</div>
                     <div class="podium-block p1">2</div>
                 </div>
                 <div class="podium-item">
                     <div class="avatar gold">@Model.Entries[0].Inicijali</div>
                     <div class="podium-name">@Model.Entries[0].Ime</div>
-                    <div class="podium-score" style="color:var(--gold)">@Model.Entries[0].Bodovi</div>
+                    <div class="podium-score" style="color:var(--gold)">@Model.Entries[0].DisplayScore</div>
                     <div class="podium-block p2">1</div>
                 </div>
                 <div class="podium-item">
                     <div class="avatar bronze">@Model.Entries[2].Inicijali</div>
                     <div class="podium-name">@Model.Entries[2].Ime</div>
-                    <div class="podium-score" style="color:var(--bronze)">@Model.Entries[2].Bodovi</div>
+                    <div class="podium-score" style="color:var(--bronze)">@Model.Entries[2].DisplayScore</div>
                     <div class="podium-block p3">3</div>
                 </div>
             </div>
@@ -495,7 +487,7 @@
 
         <div class="table-wrap">
             <div class="table-header">
-                <span>#</span><span>Korisnik</span><span>Bodovi</span><span>Tačnost</span><span>Kvizovi</span>
+                <span>Pozicija</span><span>Student</span><span>Score</span>
             </div>
             <div id="tableBody">
                 @for (var i = 0; i < Model.Entries.Count; i++)
@@ -503,7 +495,7 @@
                     var e = Model.Entries[i];
                     var rankClass = i == 0 ? "t1" : (i == 1 ? "t2" : (i == 2 ? "t3" : ""));
                     <div class="table-row @(e.JeTrenutni ? "me" : "")"
-                         data-score="@e.Bodovi" data-pct="@e.Tacnost" data-quizzes="@e.Kvizovi" data-name="@e.Ime">
+                         data-score="@e.DisplayScore" data-name="@e.Ime">
                         <span class="rank @rankClass">@(i + 1)</span>
                         <div class="user-info">
                             <div class="user-av" style="@(e.JeTrenutni ? "background:rgba(194,194,198,0.12);color:var(--accent)" : "")">@e.Inicijali</div>
@@ -512,9 +504,7 @@
                         }
     </span>
                     </div>
-                    <span class="score">@e.Bodovi</span>
-                    <span class="pct" style="color:@PctBoja(e.Tacnost)">@e.Tacnost%</span>
-                    <span class="quizzes">@e.Kvizovi</span>
+                    <span class="score">@e.DisplayScore</span>
                 </div>
             }
         </div>
@@ -524,48 +514,31 @@
 
 @section Scripts {
     <script>
-        let currentSort = 'pct';
         let lastEntries = [];
-        let currentPredmetId = '';
+        let currentPredmetId = document.querySelector('select')?.value || '';
 
         function filterPredmet(sel) {
           currentPredmetId = sel.value;
           refreshLeaderboard();
         }
 
-        // Sortira kopiju liste prema trenutnom kriteriju (opadajuće)
-        function applySort(entries) {
-          var arr = entries.slice();
-          arr.sort(function (a, b) {
-            if (currentSort === 'pct') return (b.tacnost - a.tacnost) || (b.bodovi - a.bodovi) || (b.kvizovi - a.kvizovi);
-            if (currentSort === 'score') return (b.bodovi - a.bodovi) || (b.tacnost - a.tacnost) || (b.kvizovi - a.kvizovi);
-            if (currentSort === 'quizzes') return (b.kvizovi - a.kvizovi) || (b.tacnost - a.tacnost) || (b.bodovi - a.bodovi);
-            return (b.tacnost - a.tacnost) || (b.bodovi - a.bodovi) || (b.kvizovi - a.kvizovi);
-          });
-          return arr;
-        }
+        // Rangiranje uvijek dolazi sa servera.
+        function applySort(entries) { return entries; } // Backend supplies the canonical ranking.
 
         function render() {
           var c = document.getElementById('lbContent');
           if (c) c.innerHTML = buildLeaderboardHtml(lastEntries);
         }
 
-        function sortBy(field, btnEl) {
-          currentSort = field;
-          document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-          if (btnEl) btnEl.classList.add('active');
-          render();
-        }
 
         // ===== Automatsko osvježavanje (AJAX) =====
         function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-        function pctBoja(p){ return p >= 80 ? 'var(--success)' : (p >= 60 ? 'var(--amber)' : 'var(--danger)'); }
 
         function podiumItem(cls, e, rank, block, color){
           return '<div class="podium-item">'
             + '<div class="avatar '+cls+'">'+esc(e.inicijali)+'</div>'
             + '<div class="podium-name">'+esc(e.ime)+'</div>'
-            + '<div class="podium-score" style="color:'+color+'">'+e.bodovi+'</div>'
+            + '<div class="podium-score" style="color:'+color+'">'+e.displayScore+'</div>'
             + '<div class="podium-block '+block+'">'+rank+'</div>'
             + '</div>';
         }
@@ -583,19 +556,17 @@
               + podiumItem('bronze', sorted[2], 3, 'p3', 'var(--bronze)')
               + '</div>';
           }
-          html += '<div class="table-wrap"><div class="table-header"><span>#</span><span>Korisnik</span><span>Bodovi</span><span>Tačnost</span><span>Kvizovi</span></div><div id="tableBody">';
+          html += '<div class="table-wrap"><div class="table-header"><span>Pozicija</span><span>Student</span><span>Score</span></div><div id="tableBody">';
           sorted.forEach(function(e, i){
             var rankClass = i===0?'t1':(i===1?'t2':(i===2?'t3':''));
             var meClass = e.jeTrenutni ? ' me' : '';
             var avStyle = e.jeTrenutni ? 'background:rgba(194,194,198,0.12);color:var(--accent)' : '';
             var youTag = e.jeTrenutni ? '<span class="you-tag">Ti</span>' : '';
-            html += '<div class="table-row'+meClass+'" data-score="'+e.bodovi+'" data-pct="'+e.tacnost+'" data-quizzes="'+e.kvizovi+'" data-name="'+esc(e.ime)+'">'
+            html += '<div class="table-row'+meClass+'" data-score="'+e.displayScore+'" data-name="'+esc(e.ime)+'">'
               + '<span class="rank '+rankClass+'">'+(i+1)+'</span>'
               + '<div class="user-info"><div class="user-av" style="'+avStyle+'">'+esc(e.inicijali)+'</div>'
               + '<span class="user-n">'+esc(e.ime)+' '+youTag+'</span></div>'
-              + '<span class="score">'+e.bodovi+'</span>'
-              + '<span class="pct" style="color:'+pctBoja(e.tacnost)+'">'+e.tacnost+'%</span>'
-              + '<span class="quizzes">'+e.kvizovi+'</span>'
+              + '<span class="score">'+e.displayScore+'</span>'
               + '</div>';
           });
           html += '</div></div>';

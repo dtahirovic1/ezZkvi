@@ -27,7 +27,7 @@
     <symbol id="ez-ic-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol>
 </defs></svg>
 <aside class="ez-sidebar" id="ezSidebar" aria-label="Glavna navigacija">
-    <div class="ez-sidebar-brand"><a asp-controller="@homeController" asp-action="Dashboard" class="ez-brand" aria-label="ezZkvi – otvori dashboard"><span class="ez-brand-mark" aria-hidden="true"><span></span></span>ezZkvi</a><button type="button" class="ez-sidebar-close" data-ez-sidebar-close aria-label="Zatvori navigaciju"><svg class="ez-icon"><use href="#ez-ic-close"/></svg></button></div>
+    <div class="ez-sidebar-brand"><a asp-controller="@homeController" asp-action="Dashboard" class="ez-brand" aria-label="ezZkvi – otvori dashboard"><img class="ez-logo-image" src="~/images/ezzkvi-logo.svg" asp-append-version="true" alt="" aria-hidden="true" width="48" height="18" />ezZkvi</a><button type="button" class="ez-sidebar-close" data-ez-sidebar-close aria-label="Zatvori navigaciju"><svg class="ez-icon"><use href="#ez-ic-close"/></svg></button></div>
     <div class="ez-sidebar-section-name">RADNI PROSTOR</div>
     <nav class="ez-sidebar-nav" aria-label="Glavne stranice">
         <a asp-controller="@homeController" asp-action="Dashboard" class="ez-side-link @(active(homeController, "Dashboard") ? "is-current" : "")" aria-current="@(active(homeController, "Dashboard") ? "page" : null)"><svg class="ez-icon"><use href="#ez-ic-grid"/></svg><span>Pregled</span></a>

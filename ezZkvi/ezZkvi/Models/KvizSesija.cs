@@ -32,6 +32,14 @@ namespace ezZkvi.Models
         // Rezultat
         public int BrojTacnih { get; set; }
         public int Procenat { get; set; }
+        public int? BrojNetacnih { get; set; }
+        public int? BrojPreskocenih { get; set; }
+        public decimal OsvojeniPoeni { get; set; }
+        public decimal MaksimalniPoeni { get; set; }
+        public double PrethodniScore { get; set; }
+        public double NoviScore { get; set; }
+        public double PrethodniScorePredmeta { get; set; }
+        public double NoviScorePredmeta { get; set; }
 
         public DateTime DatumPocetka { get; set; }
         public DateTime DatumZavrsetka { get; set; }

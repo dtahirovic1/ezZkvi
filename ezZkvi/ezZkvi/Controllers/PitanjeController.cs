@@ -108,6 +108,16 @@ namespace ezZkvi.Controllers
                     p.TekstPitanja.Trim().ToLower() == kljuc);
         }
 
+        private async Task<bool> DuplicateContentAsync(PitanjeSaOdgovorimaViewModel model, int? exceptId = null)
+        {
+            var text = ContentValidation.NormalizujUnos(model.TekstPitanja);
+            var ids = await _context.Pitanje.Where(p => p.PredmetId == model.PredmetId && p.OblastId == model.OblastId
+                && p.TekstPitanja == text && (!exceptId.HasValue || p.Id != exceptId.Value)).Select(p => p.Id).ToListAsync();
+            var answers = await _context.Odgovor.Where(o => ids.Contains(o.PitanjeId)).OrderBy(o => o.Id).ToListAsync();
+            var proposed = new[] { model.Odgovor1, model.Odgovor2, model.Odgovor3, model.Odgovor4 }.Select(ContentValidation.NormalizujUnos);
+            return answers.GroupBy(o => o.PitanjeId).Any(g => g.Select(o => o.Tekst).SequenceEqual(proposed, StringComparer.Ordinal));
+        }
+
         private async Task NapuniSelectListeAsync(int? predmetId = null, int? oblastId = null)
         {
             ViewData["PredmetId"] = new SelectList(
@@ -303,9 +313,9 @@ namespace ezZkvi.Controllers
                 return RedirectNaContentPitanja();
             }
 
-            if (await PostojiPitanjeSaTekstomAsync(tekstPitanja, postojeci.Id))
+            if (await DuplicateContentAsync(model, postojeci.Id))
             {
-                TempData["Error"] = "Pitanje sa istim tekstom već postoji.";
+                TempData["Error"] = "Pitanje s istim tekstom i odgovorima već postoji u ovoj oblasti.";
                 return RedirectNaContentPitanja();
             }
 
@@ -387,9 +397,9 @@ namespace ezZkvi.Controllers
                 return RedirectNaContentPitanja();
             }
 
-            if (await PostojiPitanjeSaTekstomAsync(tekstPitanja))
+            if (await DuplicateContentAsync(model))
             {
-                TempData["Error"] = "Pitanje sa istim tekstom već postoji.";
+                TempData["Error"] = "Pitanje s istim tekstom i odgovorima već postoji u ovoj oblasti.";
                 return RedirectNaContentPitanja();
             }
 

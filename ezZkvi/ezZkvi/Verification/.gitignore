@@ -1,0 +1,6 @@
+bin/
+obj/
+stop-ui
+web-server.log
+dashboard-preview.jpg
+*-ui-preview.jpg

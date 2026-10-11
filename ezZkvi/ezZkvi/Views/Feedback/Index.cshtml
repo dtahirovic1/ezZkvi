@@ -111,6 +111,13 @@
   <button class="filter-btn" onclick="setF(this,'new')">Neobrađeni</button>
 </div>
 
+@if (User.IsInRole("Admin")) {
+<form asp-controller="Feedback" asp-action="BulkDelete" method="post" class="bulk-toolbar" data-bulk-kind="feedback">
+    @Html.AntiForgeryToken()<input type="hidden" name="confirmed" value="true">
+    <label><input type="checkbox" class="bulk-all"> Označi sve prikazane</label><span class="bulk-count">Odabrano: 0</span>
+    <button type="submit" class="act-btn reject" disabled>Obriši odabrane</button>
+</form>
+}
 <div class="feed-list" id="feedList">
 
   @if (Model == null || !Model.Any())
@@ -138,6 +145,7 @@
       <div class="feed-card @(jeNovo ? "" : "processed")" data-type="@(jePrijedlog ? "suggest" : "report")" data-status="@(jeNovo ? "new" : "done")">
         <div class="feed-header">
           <div class="feed-meta">
+            @if (User.IsInRole("Admin")) { <input type="checkbox" class="bulk-check" data-kind="feedback" value="@f.ID" aria-label="Odaberi feedback" /> }
             <span class="feed-type @(jePrijedlog ? "type-suggest" : "type-report")">@(jePrijedlog ? "Prijedlog pitanja" : "Prijava greške")</span>
             <span class="feed-user">@autorPrikaz</span>
             <span class="id-tag">#FB-@f.ID</span>
@@ -154,6 +162,12 @@
         }
 
         <div class="feed-content">@f.Sadrzaj</div>
+        @if (User.IsInRole("Admin")) {
+            <form asp-action="BulkDelete" method="post" onsubmit="return confirm('Trajno obrisati ovaj feedback?');">
+                @Html.AntiForgeryToken()<input type="hidden" name="ids" value="@f.ID"><input type="hidden" name="confirmed" value="true">
+                <button class="act-btn reject" type="submit">Obriši</button>
+            </form>
+        }
 
         @if (jeNovo)
         {
@@ -182,6 +196,7 @@
 
 <div class="toast" id="toast"></div>
 
+<style>.bulk-toolbar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:16px;margin-bottom:16px;border:1px solid var(--border);border-radius:12px;background:var(--card)}.bulk-check,.bulk-all{accent-color:#8b5cf6;width:18px;height:18px}</style>
 @section Scripts {
 <script>
   function showToast(msg, type='success') {
@@ -218,4 +233,5 @@
     });
   }
 </script>
+<script src="~/js/admin-bulk.js" asp-append-version="true"></script>
 }

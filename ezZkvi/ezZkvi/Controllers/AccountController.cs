@@ -1,4 +1,6 @@
-﻿using ezZkvi.Models;
+using ezZkvi.Models;
+using ezZkvi.Data;
+using Microsoft.EntityFrameworkCore;
 using ezZkvi.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,13 +17,15 @@ namespace ezZkvi.Controllers
         private readonly SignInManager<Korisnik> _signInManager;
         private readonly UserManager<Korisnik> _userManager;
         private readonly IEmailService _emailService;
+        private readonly ApplicationDbContext _context;
 
         public AccountController(SignInManager<Korisnik> signInManager, UserManager<Korisnik> userManager,
-        IEmailService emailService)
+        IEmailService emailService, ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _emailService = emailService;
+            _context = context;
         }
 
         private async Task<IActionResult> RedirectToDashboardByRole(Korisnik user)
@@ -151,7 +155,7 @@ namespace ezZkvi.Controllers
 
                                                     {confirmationUrl}
 
-                                                    Nakon potvrde emaila, vaš nalog će biti poslan administratoru na odobrenje.";
+                                                    {(existingUser.IsApproved ? "Nakon potvrde emaila možete se prijaviti." : "Nakon potvrde emaila, vaš nalog će biti poslan administratoru na odobrenje.")}";
 
                         await _emailService.SendEmailAsync(existingUser.Email!, subject, body);
 
@@ -192,7 +196,7 @@ namespace ezZkvi.Controllers
                 UserName = username,
                 Email = model.Email,
                 EmailConfirmed = false,
-                IsApproved = false
+                IsApproved = !await _context.ApplicationSettings.Where(s => s.Id == 1).Select(s => s.RequireAdminApproval).SingleAsync()
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -251,11 +255,11 @@ namespace ezZkvi.Controllers
 
                             {confirmationUrl}
 
-                            Nakon potvrde emaila, vaš nalog će biti poslan administratoru na odobrenje.";
+                            {(user.IsApproved ? "Nakon potvrde emaila možete se prijaviti." : "Nakon potvrde emaila, vaš nalog će biti poslan administratoru na odobrenje.")}";
 
                 await _emailService.SendEmailAsync(user.Email, subject, body);
 
-                TempData["Message"] = "Registracija je uspješna. Provjerite email i potvrdite adresu. Nakon potvrde nalog ide administratoru na odobrenje.";
+                TempData["Message"] = user.IsApproved ? "Registracija je uspješna. Potvrdite email adresu pa se prijavite." : "Registracija je uspješna. Provjerite email i potvrdite adresu. Nakon potvrde nalog ide administratoru na odobrenje.";
                 return RedirectToAction("Login", "Account");
             }
             catch (Exception ex)
@@ -288,7 +292,7 @@ namespace ezZkvi.Controllers
 
             if (user.EmailConfirmed)
             {
-                TempData["Message"] = "Email adresa je već potvrđena. Nalog čeka odobrenje administratora.";
+                TempData["Message"] = user.IsApproved ? "Email adresa je već potvrđena. Možete se prijaviti." : "Email adresa je već potvrđena. Nalog čeka odobrenje administratora.";
                 return RedirectToAction("Login");
             }
 
@@ -301,7 +305,7 @@ namespace ezZkvi.Controllers
                 return RedirectToAction("Login");
             }
 
-            TempData["Message"] = "Email adresa je potvrđena. Nalog sada čeka odobrenje administratora.";
+            TempData["Message"] = user.IsApproved ? "Email adresa je potvrđena. Možete se prijaviti." : "Email adresa je potvrđena. Nalog sada čeka odobrenje administratora.";
             return RedirectToAction("Login");
         }
 

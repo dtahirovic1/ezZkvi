@@ -1,4 +1,5 @@
 using ezZkvi.Data;
+using ezZkvi.Services;
 using ezZkvi.Models;
 using ezZkvi.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -13,17 +14,27 @@ namespace ezZkvi.Controllers
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ScoreService _score;
 
-        private const int SistemskiBrojPitanja = 5;
-        private const int VremenskoOgranicenjeMinuta = 3;
-        private const double PoeniZaTacanOdgovor = 0.1;
-        private const double PoeniZaNetacanOdgovor = -0.03;
-        private const double MaksimalanBrojPoena = SistemskiBrojPitanja * PoeniZaTacanOdgovor;
+        private const int SistemskiBrojPitanja = 18;
+        private const int VremenskoOgranicenjeMinuta = 15;
+        private const decimal PoeniZaTacanOdgovor = 0.15m;
+        private const decimal PoeniZaNetacanOdgovor = -0.05m;
+        private const decimal MaksimalanBrojPoena = SistemskiBrojPitanja * PoeniZaTacanOdgovor;
         private const double OznakaPreskocenogPitanja = -1;
 
-        public StudentController(ApplicationDbContext context)
+        public StudentController(ApplicationDbContext context, ScoreService score)
         {
             _context = context;
+            _score = score;
+        }
+
+        private async Task<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction> LockSimulationAsync()
+        {
+            var tx = await _context.Database.BeginTransactionAsync();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+            await _context.Database.ExecuteSqlInterpolatedAsync($"SELECT pg_advisory_xact_lock(hashtext({userId}))");
+            return tx;
         }
 
         private static bool JeZavrsenaSesija(StatusSesije status)
@@ -118,9 +129,9 @@ namespace ezZkvi.Controllers
 
             var odabranaPitanja = SelectQuestionsByDifficulty(validnaPitanja);
 
-            if (odabranaPitanja.Count == 0)
+            if (odabranaPitanja.Count < SistemskiBrojPitanja)
             {
-                model.ErrorMessage = "Za odabranu oblast ne postoji nijedno validno ABCD pitanje. Svako pitanje mora imati tačno 4 ponuđena odgovora i tačno jedan tačan odgovor.";
+                model.ErrorMessage = "Za simulaciju je potrebno najmanje 18 validnih ABCD pitanja u odabranoj oblasti. Svako pitanje mora imati tačno 4 ponuđena odgovora i tačno jedan tačan odgovor.";
                 return model;
             }
 
@@ -161,6 +172,7 @@ namespace ezZkvi.Controllers
 
             model.KvizSesijaId = sesija.ID;
             model.PreostaloSekundi = VremenskoOgranicenjeMinuta * 60;
+            model.DeadlineUnixMilliseconds = new DateTimeOffset(DateTime.SpecifyKind(now.AddMinutes(VremenskoOgranicenjeMinuta), DateTimeKind.Utc)).ToUnixTimeMilliseconds();
             model.PocetniIndex = 0;
 
             model.Questions = odabranaPitanja
@@ -186,9 +198,9 @@ namespace ezZkvi.Controllers
         {
             var quotas = new List<(Tezina Tezina, int Broj)>
             {
-                (Tezina.TESKO, 1),
-                (Tezina.SREDNJE, 2),
-                (Tezina.LAKO, 2)
+                (Tezina.TESKO, 4),
+                (Tezina.SREDNJE, 7),
+                (Tezina.LAKO, 7)
             };
 
             var selected = new List<Pitanje>();
@@ -325,6 +337,7 @@ namespace ezZkvi.Controllers
 
             return new SimulacijaKvizaViewModel
             {
+                DeadlineUnixMilliseconds = new DateTimeOffset(DateTime.SpecifyKind(deadline, DateTimeKind.Utc)).ToUnixTimeMilliseconds(),
                 KvizSesijaId = sesija.ID,
                 PredmetId = sesija.PredmetId,
                 PredmetNaziv = sesija.Predmet?.Naziv ?? "Odabrani predmet",
@@ -384,6 +397,13 @@ namespace ezZkvi.Controllers
 
         private async Task<SimulacijaRezultatViewModel?> FinishSimulationAndBuildResultAsync(int kvizSesijaId)
         {
+            if (_context.Database.CurrentTransaction == null)
+            {
+                await using var tx = await LockSimulationAsync();
+                var result = await FinishSimulationAndBuildResultAsync(kvizSesijaId);
+                await tx.CommitAsync();
+                return result;
+            }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var sesija = await _context.KvizSesije
@@ -395,6 +415,10 @@ namespace ezZkvi.Controllers
             }
 
             var vecObradjena = JeZavrsenaSesija(sesija.Status);
+
+            // A GET may have loaded this entity before waiting for another request's lock.
+            await _context.Entry(sesija).ReloadAsync();
+            vecObradjena = JeZavrsenaSesija(sesija.Status);
 
             var deadline = sesija.DatumPocetka.AddMinutes(sesija.VremenskoOgranicenje);
             var vrijemeIsteklo = DateTime.UtcNow >= deadline;
@@ -408,7 +432,16 @@ namespace ezZkvi.Controllers
 
             if (stavke.Count == 0)
             {
-                return null;
+                if (!vecObradjena) return null;
+                return new SimulacijaRezultatViewModel {
+                    UkupnoPitanja = sesija.TraziBrojPitanja, TacnihOdgovora = sesija.BrojTacnih,
+                    NetacnihOdgovora = sesija.BrojNetacnih, Neodgovorenih = sesija.BrojPreskocenih,
+                    Procenat = sesija.Procenat, OsvojeniPoeni = sesija.OsvojeniPoeni,
+                    MaksimalniPoeni = sesija.MaksimalniPoeni,
+                    PrethodniScore = sesija.PrethodniScore, NoviScore = sesija.NoviScore,
+                    PrethodniScorePredmeta = sesija.PrethodniScorePredmeta, NoviScorePredmeta = sesija.NoviScorePredmeta,
+                    UtrosenoSekundi = (int)Math.Clamp((sesija.DatumZavrsetka - sesija.DatumPocetka).TotalSeconds, 0, sesija.VremenskoOgranicenje * 60)
+                };
             }
 
             var pitanjeIds = stavke.Select(x => x.PitanjeId).ToList();
@@ -442,12 +475,12 @@ namespace ezZkvi.Controllers
                 });
             }
 
-            var ukupno = stavke.Count;
-            var tacno = stavke.Count(x => x.Tacno == 1);
-            var netacno = stavke.Count(x => x.OdgovorId.HasValue && x.Tacno == 0);
-            var neodgovoreno = stavke.Count(x => !x.OdgovorId.HasValue);
-            var ostvareniPoeni = Math.Max(0, Math.Round(stavke.Sum(x => x.BrojBodova), 2));
-            var maksimalniPoeniZaSesiju = Math.Round(ukupno * PoeniZaTacanOdgovor, 2);
+            var ukupno = vecObradjena ? sesija.TraziBrojPitanja : stavke.Count;
+            var tacno = vecObradjena ? sesija.BrojTacnih : stavke.Count(x => x.Tacno == 1);
+            var netacno = vecObradjena ? sesija.BrojNetacnih : stavke.Count(x => x.OdgovorId.HasValue && x.Tacno == 0);
+            var neodgovoreno = vecObradjena ? sesija.BrojPreskocenih : stavke.Count(x => !x.OdgovorId.HasValue);
+            var ostvareniPoeni = vecObradjena ? sesija.OsvojeniPoeni : Math.Max(0m, Math.Round(stavke.Sum(x => x.BrojBodova), 2));
+            var maksimalniPoeniZaSesiju = vecObradjena ? sesija.MaksimalniPoeni : Math.Round(sesija.TraziBrojPitanja * (sesija.VremenskoOgranicenje == 3 ? 0.1m : PoeniZaTacanOdgovor), 2);
 
             var procenat = maksimalniPoeniZaSesiju == 0
                 ? 0
@@ -462,7 +495,9 @@ namespace ezZkvi.Controllers
                 Procenat = procenat,
                 OsvojeniPoeni = ostvareniPoeni,
                 MaksimalniPoeni = maksimalniPoeniZaSesiju,
-                UtrosenoSekundi = CalculateElapsedSeconds(
+                PrethodniScore = sesija.PrethodniScore, NoviScore = sesija.NoviScore,
+                PrethodniScorePredmeta = sesija.PrethodniScorePredmeta, NoviScorePredmeta = sesija.NoviScorePredmeta,
+                UtrosenoSekundi = vecObradjena ? (int)Math.Clamp((sesija.DatumZavrsetka - sesija.DatumPocetka).TotalSeconds, 0, sesija.VremenskoOgranicenje * 60) : CalculateElapsedSeconds(
                     sesija.DatumPocetka.Ticks,
                     sesija.VremenskoOgranicenje * 60
                 ),
@@ -471,6 +506,12 @@ namespace ezZkvi.Controllers
 
             if (!vecObradjena)
             {
+                sesija.PrethodniScore = await _score.ForUserAsync(userId!);
+                sesija.PrethodniScorePredmeta = await _score.ForUserAsync(userId!, sesija.PredmetId);
+                sesija.BrojNetacnih = netacno;
+                sesija.BrojPreskocenih = neodgovoreno;
+                sesija.OsvojeniPoeni = ostvareniPoeni;
+                sesija.MaksimalniPoeni = maksimalniPoeniZaSesiju;
                 sesija.Status = vrijemeIsteklo
                     ? StatusSesije.ISTEKAO
                     : StatusSesije.ZAVRSEN;
@@ -481,8 +522,17 @@ namespace ezZkvi.Controllers
 
                 await AzurirajStudentStatistikuAsync(sesija, ukupno, tacno);
 
-                _context.KvizSesijaPitanja.RemoveRange(stavke);
-
+                await _context.SaveChangesAsync();
+                sesija.NoviScore = await _score.ForUserAsync(userId!);
+                sesija.NoviScorePredmeta = await _score.ForUserAsync(userId!, sesija.PredmetId);
+                rezultat.PrethodniScore = sesija.PrethodniScore;
+                rezultat.NoviScore = sesija.NoviScore;
+                rezultat.PrethodniScorePredmeta = sesija.PrethodniScorePredmeta;
+                rezultat.NoviScorePredmeta = sesija.NoviScorePredmeta;
+                var oldIds = await _context.KvizSesije.Where(s => s.StudentId == userId && (s.Status == StatusSesije.ZAVRSEN || s.Status == StatusSesije.ISTEKAO))
+                    .OrderByDescending(s => s.DatumZavrsetka).ThenByDescending(s => s.ID).Skip(5).Select(s => s.ID).ToListAsync();
+                _context.KvizSesijaPitanja.RemoveRange(await _context.KvizSesijaPitanja.Where(x => oldIds.Contains(x.KvizSesijaId)).ToListAsync());
+                _context.KvizSesije.RemoveRange(await _context.KvizSesije.Where(s => oldIds.Contains(s.ID)).ToListAsync());
                 await _context.SaveChangesAsync();
             }
 
@@ -556,7 +606,7 @@ namespace ezZkvi.Controllers
 
                 sesijaPitanje.OdgovorId = odgovor.Id;
                 sesijaPitanje.Tacno = odgovor.IsTacan ? 1 : 0;
-                sesijaPitanje.BrojBodova = odgovor.IsTacan ? PoeniZaTacanOdgovor : PoeniZaNetacanOdgovor;
+                sesijaPitanje.BrojBodova = odgovor.IsTacan ? (sesija.VremenskoOgranicenje == 3 ? 0.1m : PoeniZaTacanOdgovor) : (sesija.VremenskoOgranicenje == 3 ? -0.03m : PoeniZaNetacanOdgovor);
                 break;
             }
 
@@ -605,31 +655,15 @@ namespace ezZkvi.Controllers
                 ? (int)Math.Round(sesije.Average(s => s.Procenat))
                 : 0;
 
-            // XP iz stvarnih kvizova (10 XP po tačnom odgovoru)
-            var brojTacnih = sesije.Sum(s => s.BrojTacnih);
-            model.XpUkupno = brojTacnih * 10;
-
-            var nivo = 1;
-            var preostaloXp = model.XpUkupno;
-            var cijenaNivoa = 100;
-            while (preostaloXp >= cijenaNivoa)
-            {
-                preostaloXp -= cijenaNivoa;
-                nivo++;
-                cijenaNivoa += 100;
-            }
-            model.Nivo = nivo;
-            model.XpUNivou = preostaloXp;
-            model.XpZaNivo = cijenaNivoa;
-
-            var tacniPoStudentu = await _context.KvizSesije
-                .Where(s => (s.Status == StatusSesije.ZAVRSEN || s.Status == StatusSesije.ISTEKAO) && s.StudentId != null)
-                .GroupBy(s => s.StudentId!)
-                .Select(g => new { StudentId = g.Key, Tacni = g.Sum(x => x.BrojTacnih) })
-                .ToListAsync();
-
-            model.UkupnoStudenata = tacniPoStudentu.Count;
-            model.Rang = tacniPoStudentu.Count(x => x.Tacni > brojTacnih) + 1;
+            var totals = await _context.StudentStatistike.Where(s => s.KorisnikId == userId).ToListAsync();
+            model.KvizoviZavrseni = totals.Sum(s => s.BrojKvizova);
+            var totalQuestions = totals.Sum(s => (long)s.UkupnoPitanja);
+            model.ProsjecanRezultat = totalQuestions == 0 ? 0 : (int)Math.Round(100.0 * totals.Sum(s => (long)s.TacniOdgovori) / totalQuestions);
+            model.Score = await _score.ForUserAsync(userId!);
+            var ranking = await _score.LeaderboardAsync(userId);
+            model.UkupnoStudenata = ranking.Count;
+            var position = ranking.FindIndex(s => s.JeTrenutni);
+            model.Rang = position < 0 ? null : position + 1;
 
             model.NedavneAktivnosti = sesije
                 .Take(5)
@@ -637,7 +671,9 @@ namespace ezZkvi.Controllers
                 {
                     PredmetNaziv = s.Predmet != null ? s.Predmet.Naziv : "Nepoznat predmet",
                     Procenat = s.Procenat,
-                    Datum = s.DatumZavrsetka
+                    Datum = s.DatumZavrsetka,
+                    SesijaId = s.ID, Poeni = s.OsvojeniPoeni, MaksimalniPoeni = s.MaksimalniPoeni,
+                    PrethodniScore = s.PrethodniScore, NoviScore = s.NoviScore
                 })
                 .ToList();
 
@@ -646,16 +682,12 @@ namespace ezZkvi.Controllers
                 .Select(g => new { PredmetId = g.Key, Broj = g.Count() })
                 .ToDictionaryAsync(x => x.PredmetId, x => x.Broj);
 
-            model.MojiPredmeti = sesije
-                .Where(s => s.Predmet != null)
-                .GroupBy(s => s.Predmet!)
-                .Select(g => new PredmetNapredakViewModel
-                {
-                    Naziv = g.Key.Naziv,
-                    Procenat = (int)Math.Round(g.Average(s => s.Procenat)),
-                    BrojPitanja = brojPitanjaPoPredmetu.TryGetValue(g.Key.Id, out var b) ? b : 0
-                })
-                .ToList();
+            var predmetNames = await _context.Predmet.ToDictionaryAsync(p => p.Id, p => p.Naziv);
+            model.MojiPredmeti = totals.Where(t => predmetNames.ContainsKey(t.PredmetId)).Select(t => new PredmetNapredakViewModel {
+                Naziv = predmetNames[t.PredmetId],
+                Procenat = t.UkupnoPitanja == 0 ? 0 : (int)Math.Round(100.0 * t.TacniOdgovori / t.UkupnoPitanja),
+                BrojPitanja = brojPitanjaPoPredmetu.GetValueOrDefault(t.PredmetId)
+            }).ToList();
 
             return View(model);
         }
@@ -786,6 +818,14 @@ namespace ezZkvi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartSimulation(SimulacijaKvizaViewModel model)
         {
+            await using var tx = await LockSimulationAsync();
+            var result = await StartSimulationLocked(model);
+            await tx.CommitAsync();
+            return result;
+        }
+
+        private async Task<IActionResult> StartSimulationLocked(SimulacijaKvizaViewModel model)
+        {
             if (!model.PredmetId.HasValue)
             {
                 TempData["SimulationError"] = "Moraš odabrati predmet prije pokretanja simulacije.";
@@ -861,6 +901,14 @@ namespace ezZkvi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitSimulation(SimulacijaSubmitViewModel submitModel)
         {
+            await using var tx = await LockSimulationAsync();
+            var result = await SubmitSimulationLocked(submitModel);
+            await tx.CommitAsync();
+            return result;
+        }
+
+        private async Task<IActionResult> SubmitSimulationLocked(SimulacijaSubmitViewModel submitModel)
+        {
             if (submitModel.KvizSesijaId <= 0)
             {
                 TempData["SimulationError"] = "Simulacija nije validna.";
@@ -896,12 +944,37 @@ namespace ezZkvi.Controllers
                 Oblasti = await GetOblastiZaSimulacijuAsync(sesija.OblastId)
             };
 
-            return View("Simulate", model);
+            return RedirectToAction(nameof(SimulationResult), new { id = sesija.ID });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SimulationResult(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var sesija = await _context.KvizSesije.Include(s => s.Predmet).Include(s => s.Oblast)
+                .FirstOrDefaultAsync(s => s.ID == id && s.StudentId == userId &&
+                    (s.Status == StatusSesije.ZAVRSEN || s.Status == StatusSesije.ISTEKAO));
+            if (sesija == null) return NotFound("Rezultat nije među posljednjih 5 simulacija.");
+            var result = await FinishSimulationAndBuildResultAsync(id);
+            return View("Simulate", new SimulacijaKvizaViewModel {
+                KvizSesijaId = id, PredmetId = sesija.PredmetId, OblastId = sesija.OblastId,
+                PredmetNaziv = sesija.Predmet?.Naziv, OblastNaziv = sesija.Oblast?.Naziv,
+                BrojPitanja = sesija.TraziBrojPitanja, VremenskoOgranicenjeMinuta = sesija.VremenskoOgranicenje,
+                Result = result
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveSimulationAnswer(SaveSimulationAnswerViewModel answerModel)
+        {
+            await using var tx = await LockSimulationAsync();
+            var result = await SaveSimulationAnswerLocked(answerModel);
+            await tx.CommitAsync();
+            return result;
+        }
+
+        private async Task<IActionResult> SaveSimulationAnswerLocked(SaveSimulationAnswerViewModel answerModel)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -971,7 +1044,7 @@ namespace ezZkvi.Controllers
 
             sesijaPitanje.OdgovorId = odgovor.Id;
             sesijaPitanje.Tacno = odgovor.IsTacan ? 1 : 0;
-            sesijaPitanje.BrojBodova = odgovor.IsTacan ? PoeniZaTacanOdgovor : PoeniZaNetacanOdgovor;
+            sesijaPitanje.BrojBodova = odgovor.IsTacan ? (sesija.VremenskoOgranicenje == 3 ? 0.1m : PoeniZaTacanOdgovor) : (sesija.VremenskoOgranicenje == 3 ? -0.03m : PoeniZaNetacanOdgovor);
 
             await _context.SaveChangesAsync();
 

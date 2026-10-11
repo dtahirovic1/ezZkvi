@@ -57,12 +57,11 @@ namespace ezZkvi.Controllers
                     p.Naziv.Trim().ToLower() == kljuc);
         }
 
-        private async Task<bool> PostojiPitanjeSaTekstomAsync(string tekstPitanja)
+        private async Task<bool> PostojiPitanjeAsync(int predmetId, int oblastId, string tekst, string[] answers)
         {
-            var kljuc = ContentValidation.KljucZaPoredjenje(tekstPitanja);
-
-            return await _context.Pitanje
-                .AnyAsync(p => p.TekstPitanja.Trim().ToLower() == kljuc);
+            var candidates = await _context.Pitanje.Where(p => p.PredmetId == predmetId && p.OblastId == oblastId && p.TekstPitanja == tekst).Select(p => p.Id).ToListAsync();
+            var existing = await _context.Odgovor.Where(o => candidates.Contains(o.PitanjeId)).OrderBy(o => o.Id).ToListAsync();
+            return existing.GroupBy(o => o.PitanjeId).Any(g => g.Select(o => o.Tekst).SequenceEqual(answers.Where(a => !string.IsNullOrWhiteSpace(a)), StringComparer.Ordinal));
         }
 
         // GET: /Predmet/ExportCsv/5  — skine sva pitanja predmeta kao CSV
@@ -122,7 +121,7 @@ namespace ezZkvi.Controllers
                     CsvPolje(p.TekstPitanja),
                     CsvPolje(a?.Tekst), CsvPolje(b?.Tekst), CsvPolje(c?.Tekst), CsvPolje(d?.Tekst),
                     tacan,
-                    p.Tezina.ToString(),
+                    DifficultyNames.Csv(p.Tezina),
                     CsvPolje(p.Oblast?.Naziv)
                 }));
             }
@@ -166,6 +165,7 @@ namespace ezZkvi.Controllers
                 return RedirectNaContentPitanja();
             }
 
+            await using var importTx = await _context.Database.BeginTransactionAsync();
             var dodano = 0;
             var preskoceno = 0;
             var prviRed = true;
@@ -173,7 +173,7 @@ namespace ezZkvi.Controllers
             using var reader = new StreamReader(file.OpenReadStream());
             string? linija;
 
-            while ((linija = await reader.ReadLineAsync()) != null)
+            while ((linija = await ReadCsvRecordAsync(reader)) != null)
             {
                 if (prviRed) { prviRed = false; continue; }   // preskoči zaglavlje
                 if (string.IsNullOrWhiteSpace(linija)) continue;
@@ -181,16 +181,16 @@ namespace ezZkvi.Controllers
                 var polja = ParsirajCsvLiniju(linija);
                 if (polja.Count < 7) { preskoceno++; continue; }
 
-                var tekst = ContentValidation.NormalizujUnos(polja[0]);
+                var tekst = polja[0];
                 var tacan = polja[5].Trim().ToUpper();
                 var tezinaStr = polja[6].Trim().ToUpper();
 
                 var kandidati = new[]
                 {
-                    ("A", polja[1].Trim()),
-                    ("B", polja[2].Trim()),
-                    ("C", polja[3].Trim()),
-                    ("D", polja[4].Trim())
+                    ("A", polja[1]),
+                    ("B", polja[2]),
+                    ("C", polja[3]),
+                    ("D", polja[4])
                 };
                 var validni = kandidati.Where(k => !string.IsNullOrWhiteSpace(k.Item2)).ToList();
 
@@ -201,18 +201,18 @@ namespace ezZkvi.Controllers
                     continue;
                 }
 
-                if (validni.Any(k => ContentValidation.NormalizujUnos(k.Item2).Length < 1 || ContentValidation.NormalizujUnos(k.Item2).Length > 500))
+                if (validni.Any(k => k.Item2.Length < 1 || k.Item2.Length > 500))
                 {
                     preskoceno++;
                     continue;
                 }
 
-                if (!Enum.TryParse<Tezina>(tezinaStr, out var tezina))
+                if (!DifficultyNames.TryParse(tezinaStr, out var tezina))
                 {
                     tezina = Tezina.SREDNJE;
                 }
 
-                if (await PostojiPitanjeSaTekstomAsync(tekst))
+                if (await PostojiPitanjeAsync(predmetId, oblastId, tekst, kandidati.Select(k => k.Item2).ToArray()))
                 {
                     preskoceno++;
                     continue;
@@ -230,7 +230,7 @@ namespace ezZkvi.Controllers
 
                 var odgovori = validni.Select(k => new Odgovor
                 {
-                    Tekst = ContentValidation.NormalizujUnos(k.Item2),
+                    Tekst = k.Item2,
                     PitanjeId = pitanje.Id,
                     IsTacan = k.Item1 == tacan
                 });
@@ -240,9 +240,34 @@ namespace ezZkvi.Controllers
                 dodano++;
             }
 
+            await importTx.CommitAsync();
             TempData["Success"] = $"Uvezeno {dodano} pitanja."
-                + (preskoceno > 0 ? $" Preskočeno {preskoceno} neispravnih redova." : "");
+                + (preskoceno > 0 ? $" Preskočeno {preskoceno} duplikata ili neispravnih redova." : "");
             return RedirectNaContentPitanja();
+        }
+
+        private static async Task<string?> ReadCsvRecordAsync(StreamReader reader)
+        {
+            var record = new StringBuilder();
+            var inQuotes = false;
+            while (true)
+            {
+                var value = reader.Read();
+                if (value < 0) return record.Length == 0 ? null : record.ToString();
+                var c = (char)value;
+                if (c == '"') {
+                    record.Append(c);
+                    if (inQuotes && reader.Peek() == '"') record.Append((char)reader.Read());
+                    else inQuotes = !inQuotes;
+                }
+                else if (!inQuotes && (c == '\r' || c == '\n')) {
+                    if (c == '\r' && reader.Peek() == '\n') reader.Read();
+                    return record.ToString();
+                }
+                else record.Append(c);
+                if (record.Length > 1024 * 1024) throw new InvalidDataException("CSV red je prevelik.");
+                if (record.Length % 4096 == 0) await Task.Yield();
+            }
         }
 
         // Pretvori vrijednost u sigurno CSV polje (navodnici ako ima zarez/navodnik)

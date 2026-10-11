@@ -1,6 +1,7 @@
 @{
     var pageController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Home";
     var pageAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
+    var pageStyleAction = pageController == "Student" && pageAction == "SimulationResult" ? "Simulate" : pageAction;
     var isWorkspace = User.Identity?.IsAuthenticated == true &&
         !(pageController.Equals("Home", StringComparison.OrdinalIgnoreCase) && pageAction.Equals("Index", StringComparison.OrdinalIgnoreCase)) &&
         !pageController.Equals("Account", StringComparison.OrdinalIgnoreCase);
@@ -16,7 +17,7 @@
         (backController == pageController && (pageAction == "Edit" || pageAction == "Details" || pageAction == "Delete" || pageAction == "Create") ? "Index" : "Dashboard");
     var pageDescription = ViewData["PageDescription"]?.ToString() ??
         (pageController == "Student" && pageAction == "Prepare" ? "Odaberi predmet, oblast i vježbaj svojim tempom." :
-        pageController == "Student" && pageAction.Contains("Simulation", StringComparison.OrdinalIgnoreCase) || pageController == "Student" && pageAction == "Simulate" ? "Pet pitanja. Tri minute. Provjeri svoje znanje u uslovima ispita." :
+        pageController == "Student" && pageAction.Contains("Simulation", StringComparison.OrdinalIgnoreCase) || pageController == "Student" && pageAction == "Simulate" ? "18 pitanja. 15 minuta. Provjeri svoje znanje u uslovima ispita." :
         pageController == "Feedback" && pageAction == "Create" ? "Podijeli prijedlog pitanja ili prijavi problem." :
         pageController == "Leaderboard" ? "Uporedi rezultate i prati rang-listu." :
         pageController == "Content" || pageController == "Moderator" && pageAction == "Content" ? "Uređivanje pitanja, oblasti i predmeta." :
@@ -29,6 +30,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#040506">
     <title>@pageTitle – ezZkvi</title>
+    <link rel="icon" type="image/svg+xml" href="~/images/ezzkvi-logo.svg" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -41,8 +43,9 @@
     <link rel="stylesheet" href="~/css/ez-landing-v6.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/ez-purple-v6.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/ez-refinements-v7.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ez-ui-fixes.css" asp-append-version="true" />
 </head>
-<body class="app-shell view-@pageController.ToLowerInvariant() view-@pageController.ToLowerInvariant()-@pageAction.ToLowerInvariant() @(isWorkspace ? "ez-has-workspace" : "")">
+<body class="app-shell view-@pageController.ToLowerInvariant() view-@pageController.ToLowerInvariant()-@pageStyleAction.ToLowerInvariant() @(isWorkspace ? "ez-has-workspace" : "")">
     @if (isWorkspace)
     {
         <div class="ez-app-frame">

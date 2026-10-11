@@ -641,6 +641,13 @@
     </div>
 }
 
+<form asp-action="UpdateRegistrationPolicy" method="post" class="message-box approval-policy">
+    @Html.AntiForgeryToken()
+    <label class="approval-toggle"><input type="checkbox" name="requireAdminApproval" value="true" checked="@(ViewBag.RequireAdminApproval == true)" role="switch" aria-describedby="approval-policy-description"><span class="approval-track" aria-hidden="true"></span><span>Zahtijevaj odobrenje administratora za nove korisnike</span></label>
+    <p id="approval-policy-description">@(ViewBag.RequireAdminApproval == true ? "Aktivno: email verifikacija i odobrenje administratora." : "Aktivno: pristup nakon email verifikacije, bez administratorskog odobrenja.") Postavka važi samo za nove registracije.</p>
+    <button type="submit" class="btn-main approval-save">Sačuvaj postavku</button>
+</form>
+
 <div class="stats">
     <div class="stat">
         <div class="stat-val a" id="statTotal">@totalUsers</div>

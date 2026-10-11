@@ -9,6 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
+// Isolated integration-test host: never read or overwrite the user's DPAPI keys.
+if (builder.Environment.IsEnvironment("Verification"))
+{
+    var verificationConnection = new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
+    if (verificationConnection.Host != "localhost" ||
+        !verificationConnection.Database!.StartsWith("ezkvi_verify_", StringComparison.Ordinal))
+        throw new InvalidOperationException("Verification requires an isolated local test database.");
+    builder.Services.AddSingleton<Microsoft.AspNetCore.DataProtection.IDataProtectionProvider>(
+        new Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider());
+    builder.Logging.ClearProviders();
+    builder.Logging.AddConsole();
+}
+
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseNpgsql(connectionString));
 
@@ -16,7 +29,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<Korisnik, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedAccount = true;
 })
     .AddErrorDescriber<ezZkvi.Services.BosanskiIdentityErrorDescriber>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -64,6 +77,7 @@ builder.Services.Configure<EmailSettings>(
 );
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ScoreService>();
 
 var app = builder.Build();
 

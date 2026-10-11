@@ -12,10 +12,12 @@ namespace ezZkvi.Controllers
     public class LeaderboardController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ezZkvi.Services.ScoreService _score;
 
-        public LeaderboardController(ApplicationDbContext context)
+        public LeaderboardController(ApplicationDbContext context, ezZkvi.Services.ScoreService score)
         {
             _context = context;
+            _score = score;
         }
 
         public async Task<IActionResult> Index(int? predmetId)
@@ -57,66 +59,7 @@ namespace ezZkvi.Controllers
             return "Student";
         }
 
-        private async Task<List<LeaderboardEntryViewModel>> BuildLeaderboardAsync(int? predmetId)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var query = _context.StudentStatistike.AsQueryable();
-
-            if (predmetId.HasValue)
-            {
-                query = query.Where(s => s.PredmetId == predmetId.Value);
-            }
-
-            var statistika = await query
-                .GroupBy(s => s.KorisnikId)
-                .Select(g => new
-                {
-                    StudentId = g.Key,
-                    Kvizovi = g.Sum(x => x.BrojKvizova),
-                    UkupnoTacnih = g.Sum(x => x.TacniOdgovori),
-                    UkupnoPitanja = g.Sum(x => x.UkupnoPitanja)
-                })
-                .Where(s => s.Kvizovi > 0 && s.UkupnoPitanja > 0)
-                .ToListAsync();
-
-            var ids = statistika.Select(s => s.StudentId).ToList();
-
-            var korisnici = await _context.Users
-                .Where(u => ids.Contains(u.Id))
-                .ToDictionaryAsync(u => u.Id, u => u.UserName);
-
-            return statistika
-                .Select(s =>
-                {
-                    korisnici.TryGetValue(s.StudentId, out var userName);
-
-                    var ime = !string.IsNullOrEmpty(userName) && userName.Contains('@')
-                        ? userName.Split('@')[0]
-                        : (userName ?? "Student");
-
-                    var inicijali = ime.Length >= 2
-                        ? ime.Substring(0, 2).ToUpper()
-                        : ime.ToUpper();
-
-                    var tacnost = s.UkupnoPitanja > 0
-                        ? (int)Math.Round((double)s.UkupnoTacnih / s.UkupnoPitanja * 100)
-                        : 0;
-
-                    return new LeaderboardEntryViewModel
-                    {
-                        Ime = ime,
-                        Inicijali = inicijali,
-                        Bodovi = s.UkupnoTacnih * 10,
-                        Tacnost = tacnost,
-                        Kvizovi = s.Kvizovi,
-                        JeTrenutni = s.StudentId == userId
-                    };
-                })
-                .OrderByDescending(e => e.Tacnost)
-                .ThenByDescending(e => e.Bodovi)
-                .ThenByDescending(e => e.Kvizovi)
-                .ToList();
-        }
+        private Task<List<LeaderboardEntryViewModel>> BuildLeaderboardAsync(int? predmetId)
+            => _score.LeaderboardAsync(User.FindFirstValue(ClaimTypes.NameIdentifier), predmetId);
     }
 }

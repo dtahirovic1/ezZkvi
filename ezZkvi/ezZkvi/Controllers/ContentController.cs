@@ -2,6 +2,7 @@ using System.Security.Claims;
 using ezZkvi.Data;
 using ezZkvi.Models;
 using ezZkvi.ViewModels;
+using ezZkvi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,6 +19,66 @@ namespace ezZkvi.Controllers
         public ContentController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BulkDelete(string kind, int[] ids, bool confirmed)
+        {
+            ids = (ids ?? Array.Empty<int>()).Distinct().ToArray();
+            if (!confirmed || ids.Length == 0 || ids.Any(id => id <= 0) || ids.Length > 10000)
+                return BadRequest("Neispravan odabir ili nedostaje potvrda brisanja.");
+            await using var tx = await _context.Database.BeginTransactionAsync();
+            switch (kind)
+            {
+                case "questions":
+                    var questions = await _context.Pitanje.Where(p => ids.Contains(p.Id)).ToListAsync();
+                    if (questions.Count != ids.Length) return BadRequest("Odabir više nije važeći. Osvježite stranicu.");
+                    foreach (var p in questions) await ContentDeletionService.ObrisiPitanjeSaSadrzajemAsync(_context, p.Id);
+                    break;
+                case "areas":
+                    var areas = await _context.Oblast.Where(o => ids.Contains(o.Id)).ToListAsync();
+                    if (areas.Count != ids.Length) return BadRequest("Odabir više nije važeći. Osvježite stranicu.");
+                    foreach (var o in areas) await ContentDeletionService.ObrisiOblastSaSadrzajemAsync(_context, o.Id);
+                    _context.Oblast.RemoveRange(areas);
+                    break;
+                case "subjects":
+                    var subjects = await _context.Predmet.Where(p => ids.Contains(p.Id)).ToListAsync();
+                    if (subjects.Count != ids.Length) return BadRequest("Odabir više nije važeći. Osvježite stranicu.");
+                    foreach (var p in subjects) await ContentDeletionService.ObrisiPredmetSaSadrzajemAsync(_context, p.Id);
+                    _context.Predmet.RemoveRange(subjects);
+                    break;
+                default: return BadRequest();
+            }
+            await _context.SaveChangesAsync();
+            await tx.CommitAsync();
+            TempData["Success"] = $"Obrisano stavki: {ids.Length}.";
+            return RedirectToAction(nameof(Index), new { tab = kind });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletionPreview(string kind, int[] ids)
+        {
+            ids = (ids ?? Array.Empty<int>()).Distinct().ToArray();
+            if (ids.Length == 0 || ids.Length > 10000 || ids.Any(id => id <= 0)) return BadRequest();
+            var questions = _context.Pitanje.AsQueryable();
+            var areas = 0;
+            if (kind == "questions") questions = questions.Where(p => ids.Contains(p.Id));
+            else if (kind == "areas") questions = questions.Where(p => ids.Contains(p.OblastId));
+            else if (kind == "subjects") {
+                questions = questions.Where(p => ids.Contains(p.PredmetId));
+                areas = await _context.Oblast.CountAsync(o => ids.Contains(o.PredmetId));
+            } else return BadRequest();
+            var questionIds = await questions.Select(p => p.Id).ToListAsync();
+            var sessionIds = await _context.KvizSesijaPitanja.Where(x => questionIds.Contains(x.PitanjeId)).Select(x => x.KvizSesijaId).Distinct().ToListAsync();
+            var sessions = kind == "questions" ? 0 : await _context.KvizSesije.CountAsync(s => sessionIds.Contains(s.ID)
+                || (kind == "subjects" && s.PredmetId.HasValue && ids.Contains(s.PredmetId.Value))
+                || (kind == "areas" && s.OblastId.HasValue && ids.Contains(s.OblastId.Value)));
+            var feedback = kind == "subjects" ? await _context.Feedback.CountAsync(f => f.PredmetId.HasValue && ids.Contains(f.PredmetId.Value)) : 0;
+            return Json(new { questions = questionIds.Count, areas, sessions, feedback });
         }
 
         private async Task<List<int>?> DozvoljeniPredmetiIdAsync()
@@ -121,6 +182,7 @@ namespace ezZkvi.Controllers
                     Id = p.Id,
                     Naziv = p.Naziv,
                     BrojPitanja = brojPitanjaPoPredmetu.TryGetValue(p.Id, out var b) ? b : 0
+                    , BrojOblasti = oblasti.Count(o => o.PredmetId == p.Id)
                 })
                 .ToList();
 

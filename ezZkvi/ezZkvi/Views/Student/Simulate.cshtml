@@ -674,12 +674,12 @@
 
                 <div class="result-stat">
                     <div class="result-label">Netačno</div>
-                    <div class="result-value danger">@Model.Result.NetacnihOdgovora</div>
+                    <div class="result-value danger">@(Model.Result.NetacnihOdgovora?.ToString() ?? "Nije sačuvano")</div>
                 </div>
 
                 <div class="result-stat">
                     <div class="result-label">Preskočeno</div>
-                    <div class="result-value">@Model.Result.Neodgovorenih</div>
+                    <div class="result-value">@(Model.Result.Neodgovorenih?.ToString() ?? "Nije sačuvano")</div>
                 </div>
             </div>
 
@@ -697,7 +697,20 @@
                 </a>
             </div>
 
-            <div class="answers-review">
+            @{
+    var previous = ScoreService.Display(Model.Result.PrethodniScore);
+    var next = ScoreService.Display(Model.Result.NoviScore);
+    var delta = next - previous;
+    var previousSubject = ScoreService.Display(Model.Result.PrethodniScorePredmeta);
+    var nextSubject = ScoreService.Display(Model.Result.NoviScorePredmeta);
+}
+<div class="quiz-meta" style="padding:16px;border:1px solid var(--border);border-radius:12px;margin:16px 0">
+    <strong>Ukupni Score:</strong> @previous → @next
+    <span style="color:@(Model.Result.NoviScore > Model.Result.PrethodniScore ? "var(--success)" : Model.Result.NoviScore < Model.Result.PrethodniScore ? "var(--danger)" : "var(--muted)")">@(delta > 0 ? "↑ +" : delta < 0 ? "↓ " : "")@delta</span>
+    <div>Score predmeta: @previousSubject → @nextSubject (@(nextSubject - previousSubject > 0 ? "+" : "")@(nextSubject - previousSubject))</div>
+</div>
+
+<div class="answers-review">
                 <div class="section-label">Pregled odgovora</div>
 
                 @foreach (var item in Model.Result.Pregled)
@@ -749,11 +762,11 @@
                 <div class="quiz-session-title">
                     <div class="section-label">KVIZ SESIJA</div>
                     <h1 class="quiz-heading">Provjeri svoje znanje.</h1>
-                    <p class="quiz-meta">5 pitanja · +0,10 tačno · −0,03 netačno · 0 preskočeno</p>
+                    <p class="quiz-meta">@Model.BrojPitanja pitanja · +0,15 tačno · −0,05 netačno · 0 preskočeno</p>
                 </div>
                 <div class="timer-box" aria-label="Preostalo vrijeme">
                     <div class="timer-label">PREOSTALO</div>
-                    <div class="timer-value" id="timer" data-seconds="@totalSeconds" role="timer">00:00</div>
+                    <div class="timer-value" id="timer" data-deadline="@Model.DeadlineUnixMilliseconds" data-seconds="@totalSeconds" role="timer">00:00</div>
                 </div>
             </div>
 
@@ -879,7 +892,7 @@
             <div class="section-label">Pokretanje simulacije</div>
 
             <p class="form-description">
-                Odaberi predmet i oblast. Sistem izvlači 1 teško, 2 srednja i 2 laka ABCD pitanja iz odabrane oblasti.
+                Odaberi predmet i oblast. Simulacija sadrži 18 ABCD pitanja i traje 15 minuta.
             </p>
 
             <form asp-controller="Student" asp-action="StartSimulation" method="post" id="startSimulationForm">
@@ -920,6 +933,12 @@
                         Moraš odabrati oblast prije pokretanja simulacije.
                     </div>
                 </div>
+
+<div class="quiz-meta" style="margin:16px 0;padding:16px;border:1px solid var(--border);border-radius:12px">
+    <strong>ⓘ Kako simulacija utiče na tvoj Score?</strong>
+    <p>Svaka završena simulacija utiče na tvoj Score i poziciju na rang-listi. Dobri rezultati mogu povećati tvoj Score, dok ga slabiji rezultati mogu smanjiti. Score zavisi od ukupne tačnosti i broja riješenih pitanja.</p>
+    <p>18 pitanja · 15 minuta · Tačno: +0,15 · Netačno: −0,05 · Preskočeno: 0 · Maksimalno: 2,70 poena.</p>
+</div>
 
                 <div class="actions">
                     <button type="submit" class="btn-main">
@@ -1161,8 +1180,8 @@
         const timer = document.getElementById('timer');
 
         if (timer && quizForm) {
-            const initialSeconds = parseInt(timer.dataset.seconds || '600', 10);
-            const deadline = Date.now() + Math.max(initialSeconds, 0) * 1000;
+            const initialSeconds = parseInt(timer.dataset.seconds || '900', 10);
+            const deadline = Number(timer.dataset.deadline) || (Date.now() + Math.max(initialSeconds, 0) * 1000);
             let timerSubmitted = false;
             let interval = null;
 

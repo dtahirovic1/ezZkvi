@@ -8,7 +8,9 @@ namespace ezZkvi.ViewModels
         public int? Rang { get; set; }
         public int UkupnoStudenata { get; set; }
 
-        // Nivo / XP
+        public double Score { get; set; }
+
+        // Legacy XP fields
         public int Nivo { get; set; }
         public int XpUkupno { get; set; }
         public int XpUNivou { get; set; }            // bodovi unutar trenutnog nivoa (0-99)
@@ -28,6 +30,11 @@ namespace ezZkvi.ViewModels
     {
         public string PredmetNaziv { get; set; } = "Predmet";
         public int Procenat { get; set; }
+        public int SesijaId { get; set; }
+        public decimal Poeni { get; set; }
+        public decimal MaksimalniPoeni { get; set; }
+        public double PrethodniScore { get; set; }
+        public double NoviScore { get; set; }
         public DateTime Datum { get; set; }
     }
 

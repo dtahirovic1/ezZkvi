@@ -1,0 +1,59 @@
+/* Scoped overrides after the shared workspace styles. */
+body.view-administrator-users .ez-stage-body > form.approval-policy {
+  max-width: none;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+body.view-administrator-users form.approval-policy label.approval-toggle {
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: #ededf0;
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.approval-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.approval-toggle .approval-track {
+  display: block;
+  position: relative;
+  flex: 0 0 46px;
+  width: 46px;
+  height: 26px;
+  border-radius: 20px;
+  background: #454054;
+}
+.approval-track::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  top: 3px;
+  left: 3px;
+  transition: transform .2s;
+}
+.approval-toggle input:checked + .approval-track { background: #8b5cf6; }
+.approval-toggle input:checked + .approval-track::after { transform: translateX(20px); }
+.approval-toggle input:focus-visible + .approval-track { outline: 2px solid #cdb8f2; outline-offset: 3px; }
+.approval-policy p { margin: 12px 0 16px; color: #a0a1a5; line-height: 1.6; font-size: 12px; }
+.approval-policy .approval-save { min-height: 38px; padding: 8px 16px; font: 600 12px/1.4 Inter,system-ui,sans-serif; cursor: pointer; }
+body.app-shell img.ez-logo-image { display: block; width: 48px; height: 18px; object-fit: contain; flex: none; }
+body.view-account-login .logo { display: flex; align-items: center; justify-content: center; gap: 12px; }
+body.view-account-login img.ez-auth-logo { width: 96px; height: 36px; }
+
+@media (max-width: 600px) {
+  body.ez-has-workspace .quiz-session .quiz-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  body.ez-has-workspace .quiz-session .quiz-session-title { flex: none; width: 100%; }
+  body.ez-has-workspace .quiz-session .quiz-meta { width: 100%; overflow-wrap: normal; word-break: normal; }
+  body.ez-has-workspace .quiz-session .timer-box { width: 100%; min-width: 0; box-sizing: border-box; }
+  body.ez-has-workspace .quiz-session h1.quiz-heading { font-size: 24px; }
+  body.ez-has-workspace .quiz-session-path { flex-wrap: wrap; }
+}

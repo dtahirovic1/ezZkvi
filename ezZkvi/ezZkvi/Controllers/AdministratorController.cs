@@ -32,9 +32,21 @@ namespace ezZkvi.Controllers
             _emailService = emailService;
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateRegistrationPolicy(bool requireAdminApproval)
+        {
+            var settings = await _context.ApplicationSettings.SingleAsync(s => s.Id == 1);
+            settings.RequireAdminApproval = requireAdminApproval;
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Postavka registracije je sačuvana. Važi samo za nove naloge.";
+            return RedirectToAction(nameof(Users));
+        }
+
         // GET: /Administrator/Users
         public async Task<IActionResult> Users()
         {
+            ViewBag.RequireAdminApproval = await _context.ApplicationSettings.Where(s => s.Id == 1).Select(s => s.RequireAdminApproval).SingleAsync();
             var users = await _userManager.Users
             .Where(u => u.EmailConfirmed)
             .ToListAsync();

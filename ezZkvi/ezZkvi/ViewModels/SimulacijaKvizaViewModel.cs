@@ -1,4 +1,4 @@
-﻿using ezZkvi.Models;
+using ezZkvi.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ezZkvi.ViewModels
@@ -18,8 +18,10 @@ namespace ezZkvi.ViewModels
         public int? OblastId { get; set; }
         public string? OblastNaziv { get; set; }
 
-        public int BrojPitanja { get; set; } = 5;
-        public int VremenskoOgranicenjeMinuta { get; set; } = 3;
+        public int BrojPitanja { get; set; } = 18;
+        public int VremenskoOgranicenjeMinuta { get; set; } = 15;
+
+        public long DeadlineUnixMilliseconds { get; set; }
 
         public long StartedAtUtcTicks { get; set; }
 
@@ -82,12 +84,16 @@ namespace ezZkvi.ViewModels
     {
         public int UkupnoPitanja { get; set; }
         public int TacnihOdgovora { get; set; }
-        public int NetacnihOdgovora { get; set; }
-        public int Neodgovorenih { get; set; }
+        public int? NetacnihOdgovora { get; set; }
+        public int? Neodgovorenih { get; set; }
         public int Procenat { get; set; }
-        public double OsvojeniPoeni { get; set; }
-        public double MaksimalniPoeni { get; set; }
+        public decimal OsvojeniPoeni { get; set; }
+        public decimal MaksimalniPoeni { get; set; }
         public int UtrosenoSekundi { get; set; }
+        public double PrethodniScore { get; set; }
+        public double NoviScore { get; set; }
+        public double PrethodniScorePredmeta { get; set; }
+        public double NoviScorePredmeta { get; set; }
 
         public List<SimulacijaPregledOdgovoraViewModel> Pregled { get; set; } = new();
     }
@@ -101,7 +107,7 @@ namespace ezZkvi.ViewModels
         public bool JeTacno { get; set; }
         public bool JeOdgovoreno { get; set; }
         public bool JePreskoceno { get; set; }
-        public double OsvojeniPoeni { get; set; }
+        public decimal OsvojeniPoeni { get; set; }
     }
     public class SaveSimulationAnswerViewModel
     {

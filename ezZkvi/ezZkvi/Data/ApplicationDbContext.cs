@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ezZkvi.Models;
 
@@ -10,6 +10,8 @@ namespace ezZkvi.Data
             : base(options)
         {
         }
+
+        public DbSet<ApplicationSettings> ApplicationSettings { get; set; }
 
         public DbSet<Predmet> Predmet { get; set; }
         public DbSet<Oblast> Oblast { get; set; }
@@ -76,6 +78,9 @@ namespace ezZkvi.Data
                 .HasForeignKey(s => s.OblastId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<ApplicationSettings>().HasData(new ApplicationSettings { Id = 1, RequireAdminApproval = true });
+            modelBuilder.Entity<KvizSesija>().HasIndex(s => new { s.StudentId, s.Status, s.DatumZavrsetka });
+            modelBuilder.Entity<KvizSesijaPitanje>().Property(s => s.BrojBodova).HasPrecision(10, 2);
             base.OnModelCreating(modelBuilder);
         }
     }

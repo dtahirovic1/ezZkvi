@@ -16,6 +16,21 @@ namespace ezZkvi.Controllers
             _context = context;
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BulkDelete(int[] ids, bool confirmed)
+        {
+            ids = (ids ?? Array.Empty<int>()).Distinct().ToArray();
+            if (!confirmed || ids.Length == 0 || ids.Length > 10000 || ids.Any(id => id <= 0)) return BadRequest();
+            var rows = await _context.Feedback.Where(f => ids.Contains(f.ID)).ToListAsync();
+            if (rows.Count != ids.Length) return BadRequest("Odabir više nije važeći. Osvježite stranicu.");
+            _context.Feedback.RemoveRange(rows);
+            await _context.SaveChangesAsync();
+            TempData["Success"] = $"Obrisano feedbackova: {rows.Count}.";
+            return RedirectToAction(nameof(Index));
+        }
+
         private async Task<List<int>?> DozvoljeniPredmetiIdAsync()
         {
             if (User.IsInRole("Admin"))
@@ -212,7 +227,7 @@ namespace ezZkvi.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -239,7 +254,7 @@ namespace ezZkvi.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var feedback = await _context.Feedback.FindAsync(id);
