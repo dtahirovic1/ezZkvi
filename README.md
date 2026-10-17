@@ -35,4 +35,4 @@ Developed as a team project for the **Object-Oriented Analysis and Design** cour
 
 ## Live Application
 
-[Visit ezZkvi](/)
+[Visit ezZkvi](/https://etf--ezzkvi--fnbnpm5ym249.code.run/)
